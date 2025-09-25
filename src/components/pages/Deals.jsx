@@ -343,7 +343,7 @@ const Deals = () => {
               onChange={(e) => setFormData({...formData, title: e.target.value})}
               placeholder="Enter deal title"
             />
-/>
+{/* PLACEHOLDER - Need more context to determine correct JSX element */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField label="Contact">
