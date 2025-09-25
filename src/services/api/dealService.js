@@ -35,7 +35,7 @@ const params = {
           {"field": {"Name": "products_c"}},
           {"field": {"Name": "notes_c"}},
 {"field": {"Name": "contact_id_c"}},
-          {"field": {"Name": "sales_rep_c"}},
+          {"field": {"Name": "sales_team_c"}},
           {"field": {"Name": "stage_updated_at_c"}}
         ]
       };
@@ -61,8 +61,8 @@ const params = {
 status: deal.status_c,
         products: deal.products_c,
         notes: deal.notes_c,
-        contactId: deal.contact_id_c,
-        salesRep: deal.sales_rep_c,
+contactId: deal.contact_id_c,
+        salesTeam: deal.sales_team_c,
         stageUpdatedAt: deal.stage_updated_at_c
       }));
       
@@ -92,7 +92,7 @@ const params = {
           {"field": {"Name": "products_c"}},
           {"field": {"Name": "notes_c"}},
           {"field": {"Name": "contact_id_c"}},
-          {"field": {"Name": "sales_rep_c"}},
+{"field": {"Name": "sales_team_c"}},
           {"field": {"Name": "stage_updated_at_c"}}
         ]
       };
@@ -118,9 +118,9 @@ const params = {
           actualCloseDate: deal.actual_close_date_c,
 status: deal.status_c,
           products: deal.products_c,
-          notes: deal.notes_c,
+notes: deal.notes_c,
           contactId: deal.contact_id_c,
-          salesRep: deal.sales_rep_c,
+          salesTeam: deal.sales_team_c,
           stageUpdatedAt: deal.stage_updated_at_c
         };
       }
@@ -147,8 +147,8 @@ const createData = {
         expected_close_date_c: dealData.expected_close_date_c || dealData.expectedCloseDate,
         status_c: dealData.status_c || dealData.status || "Open",
 products_c: dealData.products_c || dealData.products || "",
-        notes_c: dealData.notes_c || dealData.notes || "",
-        sales_rep_c: dealData.sales_rep_c || dealData.salesRep || "",
+notes_c: dealData.notes_c || dealData.notes || "",
+        sales_team_c: dealData.sales_team_c || dealData.salesTeam || null,
         stage_updated_at_c: new Date().toISOString()
       };
 
@@ -194,8 +194,8 @@ const successful = response.results.filter(r => r.success);
 status: deal.status_c,
             products: deal.products_c,
             notes: deal.notes_c,
-            contactId: deal.contact_id_c,
-            salesRep: deal.sales_rep_c,
+contactId: deal.contact_id_c,
+            salesTeam: deal.sales_team_c,
             stageUpdatedAt: deal.stage_updated_at_c
           };
         }
@@ -233,7 +233,7 @@ status: deal.status_c,
       if (updateData.status_c !== undefined) updatePayload.status_c = updateData.status_c;
       if (updateData.products_c !== undefined) updatePayload.products_c = updateData.products_c;
 if (updateData.notes_c !== undefined) updatePayload.notes_c = updateData.notes_c;
-      if (updateData.sales_rep_c !== undefined) updatePayload.sales_rep_c = updateData.sales_rep_c;
+if (updateData.sales_team_c !== undefined) updatePayload.sales_team_c = updateData.sales_team_c;
       const params = {
         records: [updatePayload]
       };
@@ -322,7 +322,7 @@ if (updateData.notes_c !== undefined) updatePayload.notes_c = updateData.notes_c
 const params = {
 fields: [
           {"field": {"Name": "Name"}},
-          {"field": {"Name": "sales_rep_c"}},
+{"field": {"Name": "sales_team_c"}},
           {"field": {"Name": "title_c"}},
           {"field": {"Name": "account_id_c"}},
           {"field": {"Name": "value_c"}},
@@ -350,7 +350,7 @@ if (!response.success) {
       const transformedData = (response.data || []).map(deal => ({
         ...deal,
         title: deal.title_c,
-        salesRep: deal.sales_rep_c,
+salesTeam: deal.sales_team_c,
         accountId: deal.account_id_c,
         value: deal.value_c,
         probability: deal.probability_c,
@@ -393,7 +393,7 @@ const params = {
         ],
 fields: [
           {"field": {"Name": "Name"}},
-          {"field": {"Name": "sales_rep_c"}},
+{"field": {"Name": "sales_team_c"}},
           {"field": {"Name": "contact_id_c"}}
         ],
         where: [
@@ -421,8 +421,8 @@ if (!response.success) {
         status: deal.status_c,
         products: deal.products_c,
 notes: deal.notes_c,
-        contactId: deal.contact_id_c,
-        salesRep: deal.sales_rep_c,
+contactId: deal.contact_id_c,
+        salesTeam: deal.sales_team_c,
         stageUpdatedAt: deal.stage_updated_at_c
       }));
       return transformedData;

@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Layout from '@/components/organisms/Layout';
-import Card from '@/components/atoms/Card';
-import Button from '@/components/atoms/Button';
-import FormField from '@/components/molecules/FormField';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import ApperIcon from '@/components/ApperIcon';
-import dealService from '@/services/api/dealService';
-import contactService from '@/services/api/contactService';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import salesTeamService from "@/services/api/salesTeamService";
+import dealService from "@/services/api/dealService";
+import contactService from "@/services/api/contactService";
+import ApperIcon from "@/components/ApperIcon";
+import FormField from "@/components/molecules/FormField";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Layout from "@/components/organisms/Layout";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const stages = ["All", "New", "Qualified", "Proposal", "Negotiation", "Closed Won", "Closed Lost"];
 const productOptions = [
@@ -24,7 +25,8 @@ const productOptions = [
 function DealCreatePage() {
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
+  const [salesTeams, setSalesTeams] = useState([]);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   
@@ -37,7 +39,8 @@ function DealCreatePage() {
     stage: "New",
     expectedCloseDate: "",
     notes: "",
-    products: []
+products: [],
+    salesTeam: ""
   });
 
   useEffect(() => {
@@ -48,8 +51,12 @@ function DealCreatePage() {
     try {
       setLoading(true);
       setError("");
-      const contactsData = await contactService.getAll();
+const [contactsData, salesTeamsData] = await Promise.all([
+        contactService.getAll(),
+        salesTeamService.getAll()
+      ]);
       setContacts(contactsData);
+      setSalesTeams(salesTeamsData);
     } catch (err) {
       setError("Failed to load contacts. Please try again.");
     } finally {
@@ -92,13 +99,13 @@ function DealCreatePage() {
 
     try {
       setSaving(true);
-      const dealData = {
+const dealData = {
         ...formData,
         value: parseFloat(formData.value),
         probability: parseInt(formData.probability),
-        contactId: parseInt(formData.contactId)
+        contactId: parseInt(formData.contactId),
+        sales_team_c: parseInt(formData.salesTeam)
       };
-
       await dealService.create(dealData);
       toast.success("Deal created successfully!");
       navigate('/deals');
@@ -185,6 +192,25 @@ function DealCreatePage() {
                 onChange={(e) => setFormData({...formData, accountId: e.target.value})}
                 placeholder="Account will auto-populate from contact"
               />
+</div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sales Team *
+              </label>
+              <select
+                value={formData.salesTeam}
+                onChange={(e) => setFormData({...formData, salesTeam: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select a sales team</option>
+                {salesTeams.map((team) => (
+                  <option key={team.Id} value={team.Id}>
+                    {team.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

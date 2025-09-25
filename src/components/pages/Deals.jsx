@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import dealService from "@/services/api/dealService";
 import contactService from "@/services/api/contactService";
+import salesTeamService from "@/services/api/salesTeamService";
 import ApperIcon from "@/components/ApperIcon";
 import SearchBar from "@/components/molecules/SearchBar";
 import FormField from "@/components/molecules/FormField";
@@ -19,7 +20,8 @@ import Card from "@/components/atoms/Card";
 const Deals = () => {
   const navigate = useNavigate();
   const [deals, setDeals] = useState([]);
-  const [contacts, setContacts] = useState([]);
+const [contacts, setContacts] = useState([]);
+  const [salesTeams, setSalesTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,7 +43,7 @@ const [formData, setFormData] = useState({
     expected_close_date_c: "",
     notes_c: "",
     products_c: "",
-    sales_rep_c: ""
+sales_team_c: ""
   });
   const [errors, setErrors] = useState({});
 
@@ -62,10 +64,11 @@ const [formData, setFormData] = useState({
   const loadData = async () => {
     try {
       setLoading(true);
-      setError("");
-      const [dealsData, contactsData] = await Promise.all([
+setError("");
+      const [dealsData, contactsData, salesTeamsData] = await Promise.all([
         dealService.getAll(),
-        contactService.getAll()
+        contactService.getAll(),
+        salesTeamService.getAll()
       ]);
       setDeals(dealsData);
       setContacts(contactsData);
@@ -81,7 +84,7 @@ const [formData, setFormData] = useState({
   }, []);
 
 const resetForm = () => {
-    setFormData({
+setFormData({
       title_c: "",
       contact_id_c: "",
       account_id_c: "",
@@ -131,8 +134,8 @@ setFormData({
       stage_c: deal.stage_c,
       expected_close_date_c: deal.expected_close_date_c ? deal.expected_close_date_c.split('T')[0] : "",
       notes_c: deal.notes_c || "",
-      products_c: typeof deal.products_c === 'string' ? deal.products_c : (Array.isArray(deal.products_c) ? deal.products_c.join(',') : ""),
-      sales_rep_c: deal.sales_rep_c || ""
+products_c: typeof deal.products_c === 'string' ? deal.products_c : (Array.isArray(deal.products_c) ? deal.products_c.join(',') : ""),
+      sales_team_c: deal.sales_team_c?.Id || ""
     });
     setIsModalOpen(true);
   };
@@ -238,12 +241,24 @@ const matchesSearch =
                         </div>
                       </div>
 
-<FormField
-                        label="Sales Rep"
-                        value={formData.sales_rep_c}
-                        onChange={(e) => setFormData({...formData, sales_rep_c: e.target.value})}
-                        placeholder="Enter sales representative name"
-                      />
+<div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Sales Team
+                        </label>
+                        <select
+                          value={formData.sales_team_c}
+                          onChange={(e) => setFormData({...formData, sales_team_c: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        >
+                          <option value="">Select a sales team</option>
+                          {salesTeams.map((team) => (
+                            <option key={team.Id} value={team.Id}>
+                              {team.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="bg-gray-50 p-3 rounded-lg">
@@ -384,12 +399,13 @@ required
                 placeholder="Enter account ID"
               />
             </div>
-{formData.sales_rep_c && (
+{formData.sales_team_c && (
               <div className="text-sm text-gray-600">
-                <span className="font-medium">Sales Rep:</span> {formData.sales_rep_c}
+                <span className="font-medium">Sales Team:</span> {
+                  salesTeams.find(team => team.Id === parseInt(formData.sales_team_c))?.name || 'Unknown Team'
+                }
               </div>
             )}
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 label="Deal Value ($)"
