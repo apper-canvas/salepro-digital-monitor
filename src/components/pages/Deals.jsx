@@ -384,9 +384,9 @@ required
                 placeholder="Enter account ID"
               />
             </div>
-{deal.salesRep && (
+{formData.sales_rep_c && (
               <div className="text-sm text-gray-600">
-                <span className="font-medium">Sales Rep:</span> {deal.salesRep}
+                <span className="font-medium">Sales Rep:</span> {formData.sales_rep_c}
               </div>
             )}
 
