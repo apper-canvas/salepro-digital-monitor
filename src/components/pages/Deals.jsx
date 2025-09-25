@@ -15,14 +15,6 @@ import Layout from "@/components/organisms/Layout";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 import Card from "@/components/atoms/Card";
-import Deals from "@/apper/metadata/tables/lead_c.json";
-import Deals from "@/apper/metadata/tables/deal_c.json";
-import Deals from "@/apper/metadata/tables/client_c.json";
-import Deals from "@/apper/metadata/tables/invoice_c.json";
-import Deals from "@/apper/metadata/tables/contact_c.json";
-import Deals from "@/apper/metadata/tables/activity_c.json";
-import Deals from "@/apper/metadata/edge-functions/";
-import Deals from "@/apper/metadata/edge-functions/secrets.json";
 
 const Deals = () => {
   const navigate = useNavigate();
@@ -33,10 +25,13 @@ const Deals = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDeal, setSelectedDeal] = useState(null);
+const [selectedDeal, setSelectedDeal] = useState(null);
+  
   const handleCardClick = (deal) => {
     handleEdit(deal);
-const [formData, setFormData] = useState({
+  };
+  
+  const [formData, setFormData] = useState({
     title_c: "",
     contact_id_c: "",
     account_id_c: "",
@@ -84,8 +79,8 @@ const [formData, setFormData] = useState({
     loadData();
   }, []);
 
-  const resetForm = () => {
-setFormData({
+const resetForm = () => {
+    setFormData({
       title_c: "",
       contact_id_c: "",
       account_id_c: "",
@@ -102,8 +97,8 @@ setFormData({
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dealData = {
-...formData,
+const dealData = {
+        ...formData,
         value_c: parseFloat(formData.value_c) || 0,
         probability_c: parseInt(formData.probability_c) || 50
       };
@@ -125,8 +120,8 @@ setFormData({
 
   const handleEdit = (deal) => {
     setSelectedDeal(deal);
-    setFormData({
-title_c: deal.title_c,
+setFormData({
+      title_c: deal.title_c,
       contact_id_c: deal.contact_id_c,
       account_id_c: deal.account_id_c,
       value_c: deal.value_c ? deal.value_c.toString() : "",
@@ -151,19 +146,19 @@ title_c: deal.title_c,
     }
   };
 
-  const getContactName = (contactId) => {
-const contact = contacts.find(c => c.Id === parseInt(contactId));
-return contact ? `${contact.first_name_c} ${contact.last_name_c}` : "Unknown Contact";
+const getContactName = (contactId) => {
+    const contact = contacts.find(c => c.Id === parseInt(contactId));
+    return contact ? `${contact.first_name_c} ${contact.last_name_c}` : "Unknown Contact";
   };
 
-  const getContactCompany = (contactId) => {
-const contact = contacts.find(c => c.Id === parseInt(contactId));
-return contact ? contact.company_c : "Unknown Company";
+const getContactCompany = (contactId) => {
+    const contact = contacts.find(c => c.Id === parseInt(contactId));
+    return contact ? contact.company_c : "Unknown Company";
   };
 
   const filteredDeals = deals.filter(deal => {
-    const matchesSearch = 
-deal.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+const matchesSearch = 
+      deal.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       getContactName(deal.contact_id_c)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       getContactCompany(deal.contact_id_c)?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStage = selectedStage === "All" || deal.stage_c === selectedStage;
@@ -193,8 +188,8 @@ deal.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
               {stages.map(stage => (
                 <option key={stage} value={stage}>{stage}</option>
               ))}
-            </select>
-</div>
+</select>
+          </div>
           <Button onClick={() => navigate('/deals/new')}>
             <ApperIcon name="Plus" className="h-4 w-4 mr-2" />
             Add Deal
@@ -216,8 +211,8 @@ deal.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
               icon: "Plus"
             }}
           />
-        ) : (
-<div className="grid gap-6">
+) : (
+          <div className="grid gap-6">
             {filteredDeals.map((deal) => (
               <Card
                 key={deal.Id} 
@@ -232,8 +227,8 @@ deal.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         <div className="bg-success-100 p-2 rounded-full">
                           <ApperIcon name="Handshake" className="h-5 w-5 text-success-600" />
                         </div>
-                        <div>
-<h3 className="text-lg font-semibold text-gray-900">{deal.title_c}</h3>
+<div>
+                          <h3 className="text-lg font-semibold text-gray-900">{deal.title_c}</h3>
                           <p className="text-sm text-gray-500">
                             {getContactName(deal.contact_id_c)} at {getContactCompany(deal.contact_id_c)}
                           </p>
@@ -243,57 +238,55 @@ deal.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Deal Value</p>
-                          <p className="text-2xl font-bold text-gray-900">
-${(deal.value_c || 0).toLocaleString()}
+<p className="text-2xl font-bold text-gray-900">
+                            ${(deal.value_c || 0).toLocaleString()}
                           </p>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Probability</p>
                           <div className="flex items-center space-x-2">
                             <div className="flex-1 bg-gray-200 rounded-full h-2">
-                              <div 
-className="bg-primary-600 rounded-full h-2 transition-all duration-300"
-style={{ width: `${deal.probability_c}%` }}
+<div 
+                                className="bg-primary-600 rounded-full h-2 transition-all duration-300"
+                                style={{ width: `${deal.probability_c}%` }}
                               />
                             </div>
                             <span className="text-sm font-medium text-gray-900">
-{deal.probability_c}%
+                              {deal.probability_c}%
                             </span>
                           </div>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg">
-                          <p className="text-xs text-gray-500 mb-1">Expected Close</p>
-<p className="text-sm font-medium text-gray-900">
-                            {format(new Date(deal.expected_close_date_c), "MMM d, yyyy")}
+<p className="text-xs text-gray-500 mb-1">Expected Close</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {deal.expected_close_date_c ? format(new Date(deal.expected_close_date_c), "MMM d, yyyy") : "Not set"}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-<Badge variant={deal.stage_c ? deal.stage_c.toLowerCase().replace(" ", "") : 'default'}>
+<div className="flex items-center space-x-3">
+                          <Badge variant={deal.stage_c ? deal.stage_c.toLowerCase().replace(" ", "") : 'default'}>
                             {deal.stage_c}
                           </Badge>
-<Badge variant={
+                          <Badge variant={
                             deal.status_c === "Open" ? "primary" : 
                             deal.status_c === "Won" ? "success" : "error"
                           }>
                             {deal.status_c}
                           </Badge>
                         </div>
-                        
 {deal.actual_close_date_c && (
                           <p className="text-xs text-gray-400">
                             Closed: {format(new Date(deal.actual_close_date_c), "MMM d, yyyy")}
                           </p>
                         )}
                       </div>
-
 {deal.products_c && deal.products_c.length > 0 && (
                         <div className="mt-3">
                           <p className="text-xs text-gray-500 mb-2">Products</p>
                           <div className="flex flex-wrap gap-1">
-{deal.products_c.split(',').map((product, index) => (
+                            {deal.products_c.split(',').map((product, index) => (
                               <Badge key={index} variant="default" className="text-xs">
                                 {product.trim()}
                               </Badge>
@@ -301,7 +294,6 @@ style={{ width: `${deal.probability_c}%` }}
                           </div>
                         </div>
                       )}
-
 {deal.notes_c && (
                         <div className="mt-3 p-3 bg-gray-50 rounded-lg">
                           <p className="text-sm text-gray-700">{deal.notes_c}</p>
@@ -346,18 +338,16 @@ style={{ width: `${deal.probability_c}%` }}
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             <FormField
               label="Deal Title"
-              required
-value={formData.title_c}
+required
+              value={formData.title_c}
               onChange={(e) => setFormData({...formData, title_c: e.target.value})}
               placeholder="Enter deal title"
-            />
-{/* PLACEHOLDER - Need more context to determine correct JSX element */}
-
+/>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField label="Contact">
                 <select
-                  required
-value={formData.contact_id_c}
+required
+                  value={formData.contact_id_c}
                   onChange={(e) => {
                     const contactId = e.target.value;
                     const selectedContact = contacts.find(contact => contact.Id === parseInt(contactId));
@@ -369,15 +359,14 @@ value={formData.contact_id_c}
                   }}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
-                  <option value="">Select contact</option>
-{contacts.map(contact => (
+<option value="">Select contact</option>
+                  {contacts.map(contact => (
                     <option key={contact.Id} value={contact.Id}>
                       {contact.first_name_c} {contact.last_name_c} - {contact.company_c}
                     </option>
                   ))}
                 </select>
               </FormField>
-
 <FormField
                 label="Account ID"
                 value={formData.account_id_c}
@@ -386,23 +375,14 @@ value={formData.contact_id_c}
               />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                label="Account/Company"
-                value={formData.accountId}
-                onChange={(e) => setFormData({...formData, accountId: e.target.value})}
-                placeholder="Auto-populated from contact"
-              />
-            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 label="Deal Value ($)"
-                type="number"
-required
+type="number"
+                required
                 value={formData.value_c}
                 onChange={(e) => setFormData({...formData, value_c: e.target.value})}
-                onChange={(e) => setFormData({...formData, value: e.target.value})}
                 placeholder="0.00"
               />
 
@@ -412,20 +392,20 @@ required
                     type="range"
                     min="0"
                     max="100"
-                    step="5"
-value={formData.probability_c}
+step="5"
+                    value={formData.probability_c}
                     onChange={(e) => setFormData({...formData, probability_c: parseInt(e.target.value)})}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                   />
                   <div className="text-center text-sm font-medium text-gray-900">
-{formData.probability_c}%
+                    {formData.probability_c}%
                   </div>
                 </div>
               </FormField>
 
               <FormField label="Stage">
-                <select
-value={formData.stage_c}
+<select
+                  value={formData.stage_c}
                   onChange={(e) => setFormData({...formData, stage_c: e.target.value})}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
@@ -439,8 +419,8 @@ value={formData.stage_c}
             <FormField
               label="Expected Close Date"
               type="date"
-              required
-value={formData.expected_close_date_c}
+required
+              value={formData.expected_close_date_c}
               onChange={(e) => setFormData({...formData, expected_close_date_c: e.target.value})}
             />
 
@@ -448,10 +428,10 @@ value={formData.expected_close_date_c}
               <div className="space-y-2 max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3">
                 {productOptions.map(product => (
                   <label key={product} className="flex items-center space-x-2">
-                    <input
+<input
                       type="checkbox"
-                      checked={formData.products.includes(product)}
-onChange={(e) => {
+                      checked={formData.products_c ? formData.products_c.split(',').map(p => p.trim()).includes(product) : false}
+                      onChange={(e) => {
                         const currentProducts = formData.products_c ? formData.products_c.split(',').map(p => p.trim()) : [];
                         if (e.target.checked) {
                           const newProducts = [...currentProducts, product];
@@ -476,8 +456,8 @@ onChange={(e) => {
             </FormField>
 
             <FormField label="Notes">
-              <textarea
-value={formData.notes_c}
+<textarea
+                value={formData.notes_c}
                 onChange={(e) => setFormData({...formData, notes_c: e.target.value})}
                 placeholder="Add any notes about this deal..."
                 rows={3}
