@@ -1,0 +1,67 @@
+[
+  {
+    "Id": 1,
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "john.smith@techcorp.com",
+    "phone": "+1-555-0123",
+    "company": "TechCorp Solutions",
+    "jobTitle": "CTO",
+    "accountId": "1",
+    "relationshipLevel": "Decision Maker",
+    "lastInteraction": "2024-01-16T14:30:00Z",
+    "notes": "Very interested in our enterprise solution. Mentioned budget approval needed from board."
+  },
+  {
+    "Id": 2,
+    "firstName": "Sarah",
+    "lastName": "Johnson",
+    "email": "sarah.johnson@retailplus.com",
+    "phone": "+1-555-0124",
+    "company": "RetailPlus Inc",
+    "jobTitle": "VP Marketing",
+    "accountId": "2",
+    "relationshipLevel": "Influencer",
+    "lastInteraction": "2024-01-16T10:45:00Z",
+    "notes": "Needs solution for multi-location inventory management. Timeline is Q2 2024."
+  },
+  {
+    "Id": 3,
+    "firstName": "Michael",
+    "lastName": "Chen",
+    "email": "m.chen@healthfirst.org",
+    "phone": "+1-555-0125",
+    "company": "HealthFirst Medical",
+    "jobTitle": "Operations Director",
+    "accountId": "3",
+    "relationshipLevel": "Champion",
+    "lastInteraction": "2024-01-15T16:30:00Z",
+    "notes": "Strong advocate for our solution. Will help present to executive team."
+  },
+  {
+    "Id": 4,
+    "firstName": "Lisa",
+    "lastName": "Anderson",
+    "email": "l.anderson@techcorp.com",
+    "phone": "+1-555-0128",
+    "company": "TechCorp Solutions",
+    "jobTitle": "IT Director",
+    "accountId": "1",
+    "relationshipLevel": "Technical Evaluator",
+    "lastInteraction": "2024-01-14T11:20:00Z",
+    "notes": "Technical contact for implementation details. Concerned about integration complexity."
+  },
+  {
+    "Id": 5,
+    "firstName": "Robert",
+    "lastName": "Taylor",
+    "email": "r.taylor@globaltech.com",
+    "phone": "+1-555-0129",
+    "company": "GlobalTech Industries",
+    "jobTitle": "CEO",
+    "accountId": "4",
+    "relationshipLevel": "Decision Maker",
+    "lastInteraction": "2024-01-13T09:45:00Z",
+    "notes": "High-value prospect. Looking for comprehensive digital transformation solution."
+  }
+]

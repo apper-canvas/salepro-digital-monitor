@@ -1,0 +1,79 @@
+[
+  {
+    "Id": 1,
+    "type": "Call",
+    "contactId": "1",
+    "dealId": "1",
+    "subject": "Technical Requirements Discussion",
+    "description": "Discussed integration requirements and timeline with John Smith. He mentioned need for API documentation.",
+    "date": "2024-01-16T14:30:00Z",
+    "duration": 45,
+    "outcome": "Positive"
+  },
+  {
+    "Id": 2,
+    "type": "Meeting",
+    "contactId": "2",
+    "dealId": "2",
+    "subject": "Product Demo - Inventory Management",
+    "description": "Conducted comprehensive demo of inventory management features. Sarah was impressed with real-time reporting capabilities.",
+    "date": "2024-01-16T10:45:00Z",
+    "duration": 90,
+    "outcome": "Positive"
+  },
+  {
+    "Id": 3,
+    "type": "Email",
+    "contactId": "3",
+    "dealId": "3",
+    "subject": "Contract Signed - Welcome Package",
+    "description": "Sent welcome package and implementation timeline. Contract officially signed and executed.",
+    "date": "2024-01-15T16:30:00Z",
+    "duration": 15,
+    "outcome": "Completed"
+  },
+  {
+    "Id": 4,
+    "type": "Call",
+    "contactId": "4",
+    "dealId": "1",
+    "subject": "Technical Integration Planning",
+    "description": "Follow-up call with IT Director Lisa Anderson to discuss technical implementation details and integration timeline.",
+    "date": "2024-01-14T11:20:00Z",
+    "duration": 60,
+    "outcome": "Neutral"
+  },
+  {
+    "Id": 5,
+    "type": "Meeting",
+    "contactId": "5",
+    "dealId": "4",
+    "subject": "Executive Presentation Prep",
+    "description": "Strategy meeting with Robert Taylor to prepare for board presentation. Reviewed ROI calculations and implementation roadmap.",
+    "date": "2024-01-13T09:45:00Z",
+    "duration": 120,
+    "outcome": "Positive"
+  },
+  {
+    "Id": 6,
+    "type": "Email",
+    "contactId": "1",
+    "dealId": "1",
+    "subject": "Proposal Follow-up",
+    "description": "Sent detailed proposal with pricing and implementation timeline. Requested feedback by end of week.",
+    "date": "2024-01-10T15:20:00Z",
+    "duration": 30,
+    "outcome": "Pending"
+  },
+  {
+    "Id": 7,
+    "type": "Call",
+    "contactId": "2",
+    "dealId": "2",
+    "subject": "Pricing Discussion",
+    "description": "Negotiated pricing for multi-location deployment. Discussed volume discounts and payment terms.",
+    "date": "2024-01-09T13:15:00Z",
+    "duration": 40,
+    "outcome": "Positive"
+  }
+]
