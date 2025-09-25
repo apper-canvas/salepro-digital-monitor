@@ -17,7 +17,6 @@ import Badge from "@/components/atoms/Badge";
 import Card from "@/components/atoms/Card";
 
 const Deals = () => {
-const Deals = () => {
   const navigate = useNavigate();
   const [deals, setDeals] = useState([]);
   const [contacts, setContacts] = useState([]);
@@ -187,8 +186,8 @@ const Deals = () => {
                 <option key={stage} value={stage}>{stage}</option>
               ))}
             </select>
-          </div>
-<Button onClick={() => navigate('/deals/new')}>
+</div>
+          <Button onClick={() => navigate('/deals/new')}>
             <ApperIcon name="Plus" className="h-4 w-4 mr-2" />
             Add Deal
           </Button>
@@ -210,9 +209,9 @@ const Deals = () => {
             }}
           />
         ) : (
-          <div className="grid gap-6">
-{filteredDeals.map((deal) => (
-              <Card 
+<div className="grid gap-6">
+            {filteredDeals.map((deal) => (
+              <Card
                 key={deal.Id} 
                 hover={true}
                 onClick={() => handleCardClick(deal)}
@@ -344,8 +343,9 @@ const Deals = () => {
               onChange={(e) => setFormData({...formData, title: e.target.value})}
               placeholder="Enter deal title"
             />
+/>
 
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField label="Contact">
                 <select
                   required
