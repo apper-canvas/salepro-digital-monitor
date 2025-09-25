@@ -335,4 +335,3 @@ class InvoiceService {
   }
 }
 export default new InvoiceService();
-export default new InvoiceService();
