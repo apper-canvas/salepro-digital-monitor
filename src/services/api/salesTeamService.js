@@ -20,12 +20,13 @@ class SalesTeamService {
       this.initializeClient();
       
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "description_c"}},
           {"field": {"Name": "team_lead_c"}},
-          {"field": {"Name": "region_c"}}
+          {"field": {"Name": "region_c"}},
+          {"field": {"Name": "user_c"}}
         ],
         orderBy: [{"fieldName": "Name", "sorttype": "ASC"}],
         pagingInfo: {"limit": 100, "offset": 0}
@@ -37,12 +38,13 @@ class SalesTeamService {
         return [];
       }
       
-      return response.data.map(team => ({
+return response.data.map(team => ({
         Id: team.Id,
         name: team.Name,
         description: team.description_c,
         teamLead: team.team_lead_c,
-        region: team.region_c
+        region: team.region_c,
+        user: team.user_c
       }));
     } catch (error) {
       console.error("Error fetching sales teams:", error?.response?.data?.message || error);
@@ -56,12 +58,13 @@ class SalesTeamService {
       this.initializeClient();
       
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "description_c"}},
           {"field": {"Name": "team_lead_c"}},
-          {"field": {"Name": "region_c"}}
+          {"field": {"Name": "region_c"}},
+          {"field": {"Name": "user_c"}}
         ]
       };
       
@@ -72,11 +75,12 @@ class SalesTeamService {
       }
       
       return {
-        Id: response.data.Id,
+Id: response.data.Id,
         name: response.data.Name,
         description: response.data.description_c,
         teamLead: response.data.team_lead_c,
-        region: response.data.region_c
+        region: response.data.region_c,
+        user: response.data.user_c
       };
     } catch (error) {
       console.error(`Error fetching sales team ${id}:`, error?.response?.data?.message || error);
