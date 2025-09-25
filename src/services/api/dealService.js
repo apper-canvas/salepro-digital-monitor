@@ -335,31 +335,29 @@ const params = {
       };
       
       const response = await this.apperClient.fetchRecords(this.tableName, params);
-      
-      if (!response.success) {
+if (!response.success) {
         console.error("Error fetching deals by stage:", response.message);
         return [];
-// Transform database field names to UI-expected format
-        const transformedData = (response.data || []).map(deal => ({
-          ...deal,
-          title: deal.title_c,
-          accountId: deal.account_id_c,
-          value: deal.value_c,
-          probability: deal.probability_c,
-          stage: deal.stage_c,
-          expectedCloseDate: deal.expected_close_date_c,
-          actualCloseDate: deal.actual_close_date_c,
-          status: deal.status_c,
-          products: deal.products_c,
-          notes: deal.notes_c,
-          contactId: deal.contact_id_c,
-          stageUpdatedAt: deal.stage_updated_at_c
-        }));
-        
-        return transformedData;
       }
+
+      // Transform database field names to UI-expected format
+      const transformedData = (response.data || []).map(deal => ({
+        ...deal,
+        title: deal.title_c,
+        accountId: deal.account_id_c,
+        value: deal.value_c,
+        probability: deal.probability_c,
+        stage: deal.stage_c,
+        expectedCloseDate: deal.expected_close_date_c,
+        actualCloseDate: deal.actual_close_date_c,
+        status: deal.status_c,
+        products: deal.products_c,
+        notes: deal.notes_c,
+        contactId: deal.contact_id_c,
+        stageUpdatedAt: deal.stage_updated_at_c
+      }));
       
-      return response.data || [];
+      return transformedData;
     } catch (error) {
       console.error("Error fetching deals by stage:", error?.response?.data?.message || error);
       return [];
@@ -393,30 +391,29 @@ const params = {
       
       const response = await this.apperClient.fetchRecords(this.tableName, params);
       
-      if (!response.success) {
+if (!response.success) {
         console.error("Error fetching deals by contact:", response.message);
         return [];
-// Transform database field names to UI-expected format
-        const transformedData = (response.data || []).map(deal => ({
-          ...deal,
-          title: deal.title_c,
-          accountId: deal.account_id_c,
-          value: deal.value_c,
-          probability: deal.probability_c,
-          stage: deal.stage_c,
-          expectedCloseDate: deal.expected_close_date_c,
-          actualCloseDate: deal.actual_close_date_c,
-          status: deal.status_c,
-          products: deal.products_c,
-          notes: deal.notes_c,
-          contactId: deal.contact_id_c,
-          stageUpdatedAt: deal.stage_updated_at_c
-        }));
-        
-        return transformedData;
       }
+
+      // Transform database field names to UI-expected format
+      const transformedData = (response.data || []).map(deal => ({
+        ...deal,
+        title: deal.title_c,
+        accountId: deal.account_id_c,
+        value: deal.value_c,
+        probability: deal.probability_c,
+        stage: deal.stage_c,
+        expectedCloseDate: deal.expected_close_date_c,
+        actualCloseDate: deal.actual_close_date_c,
+        status: deal.status_c,
+        products: deal.products_c,
+        notes: deal.notes_c,
+        contactId: deal.contact_id_c,
+        stageUpdatedAt: deal.stage_updated_at_c
+      }));
       
-      return response.data || [];
+      return transformedData;
     } catch (error) {
       console.error("Error fetching deals by contact:", error?.response?.data?.message || error);
       return [];
