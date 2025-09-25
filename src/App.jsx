@@ -7,9 +7,9 @@ import Leads from "@/components/pages/Leads";
 import Contacts from "@/components/pages/Contacts";
 import Pipeline from "@/components/pages/Pipeline";
 import Deals from "@/components/pages/Deals";
+import DealCreatePage from "@/components/pages/DealCreatePage";
 import Invoices from "@/components/pages/Invoices";
 import Activities from "@/components/pages/Activities";
-
 function App() {
   return (
     <BrowserRouter>
@@ -19,7 +19,8 @@ function App() {
           <Route path="/leads" element={<Leads />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/pipeline" element={<Pipeline />} />
-          <Route path="/deals" element={<Deals />} />
+<Route path="/deals" element={<Deals />} />
+          <Route path="/deals/new" element={<DealCreatePage />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/activities" element={<Activities />} />
         </Routes>

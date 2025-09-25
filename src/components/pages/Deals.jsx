@@ -1,30 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
-import Layout from "@/components/organisms/Layout";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Badge from "@/components/atoms/Badge";
+import { useNavigate } from "react-router-dom";
+import dealService from "@/services/api/dealService";
+import contactService from "@/services/api/contactService";
+import ApperIcon from "@/components/ApperIcon";
 import SearchBar from "@/components/molecules/SearchBar";
 import FormField from "@/components/molecules/FormField";
 import Modal from "@/components/molecules/Modal";
 import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
-import dealService from "@/services/api/dealService";
-import contactService from "@/services/api/contactService";
+import Error from "@/components/ui/Error";
+import Layout from "@/components/organisms/Layout";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Card from "@/components/atoms/Card";
 
 const Deals = () => {
+const Deals = () => {
+  const navigate = useNavigate();
   const [deals, setDeals] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("All");
-const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
-
   const handleCardClick = (deal) => {
     handleEdit(deal);
   };
@@ -186,10 +188,7 @@ const [isModalOpen, setIsModalOpen] = useState(false);
               ))}
             </select>
           </div>
-          <Button onClick={() => {
-            resetForm();
-            setIsModalOpen(true);
-          }}>
+<Button onClick={() => navigate('/deals/new')}>
             <ApperIcon name="Plus" className="h-4 w-4 mr-2" />
             Add Deal
           </Button>
@@ -346,12 +345,20 @@ const [isModalOpen, setIsModalOpen] = useState(false);
               placeholder="Enter deal title"
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField label="Contact">
                 <select
                   required
                   value={formData.contactId}
-                  onChange={(e) => setFormData({...formData, contactId: e.target.value})}
+                  onChange={(e) => {
+                    const contactId = e.target.value;
+                    const selectedContact = contacts.find(contact => contact.Id === parseInt(contactId));
+                    setFormData({
+                      ...formData, 
+                      contactId,
+                      accountId: selectedContact ? selectedContact.company : formData.accountId
+                    });
+                  }}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="">Select contact</option>
@@ -364,10 +371,10 @@ const [isModalOpen, setIsModalOpen] = useState(false);
               </FormField>
 
               <FormField
-                label="Account ID"
+                label="Account/Company"
                 value={formData.accountId}
                 onChange={(e) => setFormData({...formData, accountId: e.target.value})}
-                placeholder="Enter account ID"
+                placeholder="Auto-populated from contact"
               />
             </div>
 

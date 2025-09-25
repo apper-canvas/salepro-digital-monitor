@@ -15,12 +15,13 @@ class DealService {
     return this.deals.find(deal => deal.Id === parseInt(id));
   }
 
-  async create(dealData) {
+async create(dealData) {
     await this.delay();
     const newDeal = {
       ...dealData,
-      Id: Math.max(...this.deals.map(d => d.Id)) + 1,
-      status: "Open"
+      Id: this.deals.length > 0 ? Math.max(...this.deals.map(d => d.Id)) + 1 : 1,
+      status: "Open",
+      createdDate: new Date().toISOString().split('T')[0]
     };
     this.deals.push(newDeal);
     return { ...newDeal };
