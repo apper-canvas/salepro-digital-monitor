@@ -1,0 +1,15 @@
+[
+  {
+    "Id": 1,
+    "firstName": "Michael",
+    "lastName": "Chen",
+    "email": "m.chen@healthfirst.org",
+    "phone": "+1-555-0125",
+    "company": "HealthFirst Medical",
+    "jobTitle": "Operations Director",
+    "accountId": "3",
+    "relationshipLevel": "Champion",
+    "lastInteraction": "2024-01-15T16:30:00Z",
+    "notes": "Converted from contact after successful deal closure. Strong advocate for our solution."
+  }
+]

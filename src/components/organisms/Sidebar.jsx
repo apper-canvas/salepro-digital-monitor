@@ -10,7 +10,8 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigation = [
     { name: "Dashboard", href: "/", icon: "LayoutDashboard" },
     { name: "Leads", href: "/leads", icon: "UserPlus" },
-    { name: "Contacts", href: "/contacts", icon: "Users" },
+{ name: "Contacts", href: "/contacts", icon: "Users" },
+    { name: "Clients", href: "/clients", icon: "UserCheck" },
     { name: "Pipeline", href: "/pipeline", icon: "GitBranch" },
     { name: "Deals", href: "/deals", icon: "Handshake" },
     { name: "Invoices", href: "/invoices", icon: "FileText" },

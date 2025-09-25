@@ -1,4 +1,6 @@
 import dealsData from "@/services/mockData/deals.json";
+import contactService from "@/services/api/contactService";
+import clientService from "@/services/api/clientService";
 
 class DealService {
   constructor() {
@@ -31,12 +33,49 @@ async update(id, updateData) {
     await this.delay();
     const index = this.deals.findIndex(deal => deal.Id === parseInt(id));
     if (index !== -1) {
+      const originalDeal = { ...this.deals[index] };
+      
       // If stage is being updated and no stageUpdatedAt provided, add timestamp
       if (updateData.stage && !updateData.stageUpdatedAt) {
         updateData.stageUpdatedAt = new Date().toISOString();
       }
       
+      // Update the deal
       this.deals[index] = { ...this.deals[index], ...updateData };
+      
+      // Auto-create client when deal status becomes "Closed Won"
+      if (updateData.stage === "Closed Won" && originalDeal.stage !== "Closed Won") {
+        try {
+          // Get the related contact
+          const contact = await contactService.getById(this.deals[index].contactId);
+          
+          // Check if client already exists for this contact
+          const existingClients = await clientService.getAll();
+          const clientExists = existingClients.some(client => 
+            client.email === contact.email && client.accountId === contact.accountId
+          );
+          
+          if (!clientExists) {
+            // Create client from contact data
+            const clientData = {
+              firstName: contact.firstName,
+              lastName: contact.lastName,
+              email: contact.email,
+              phone: contact.phone,
+              company: contact.company,
+              jobTitle: contact.jobTitle,
+              accountId: contact.accountId,
+              relationshipLevel: contact.relationshipLevel,
+              notes: `Converted from contact after successful deal closure: ${this.deals[index].title}`
+            };
+            
+            await clientService.create(clientData);
+          }
+        } catch (err) {
+          console.log(`Note: Could not auto-create client for deal ${id}:`, err.message);
+        }
+      }
+      
       return { ...this.deals[index] };
     }
     throw new Error("Deal not found");

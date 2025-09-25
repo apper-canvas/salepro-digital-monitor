@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import Dashboard from "@/components/pages/Dashboard";
 import Leads from "@/components/pages/Leads";
 import Contacts from "@/components/pages/Contacts";
+import Clients from "@/components/pages/Clients";
 import Pipeline from "@/components/pages/Pipeline";
 import Deals from "@/components/pages/Deals";
 import DealCreatePage from "@/components/pages/DealCreatePage";
@@ -17,7 +18,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/leads" element={<Leads />} />
-          <Route path="/contacts" element={<Contacts />} />
+<Route path="/contacts" element={<Contacts />} />
+          <Route path="/clients" element={<Clients />} />
           <Route path="/pipeline" element={<Pipeline />} />
 <Route path="/deals" element={<Deals />} />
           <Route path="/deals/new" element={<DealCreatePage />} />
