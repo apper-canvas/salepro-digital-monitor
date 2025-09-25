@@ -40,7 +40,7 @@ const [selectedDeal, setSelectedDeal] = useState(null);
     stage_c: "New",
     expected_close_date_c: "",
     notes_c: "",
-    products_c: []
+products_c: ""
   });
   const [errors, setErrors] = useState({});
 
@@ -89,7 +89,7 @@ const resetForm = () => {
       stage_c: "New",
       expected_close_date_c: "",
       notes_c: "",
-      products_c: []
+products_c: ""
     });
     setSelectedDeal(null);
   };
@@ -129,7 +129,7 @@ setFormData({
       stage_c: deal.stage_c,
       expected_close_date_c: deal.expected_close_date_c ? deal.expected_close_date_c.split('T')[0] : "",
       notes_c: deal.notes_c || "",
-      products_c: deal.products_c || ""
+products_c: typeof deal.products_c === 'string' ? deal.products_c : (Array.isArray(deal.products_c) ? deal.products_c.join(',') : "")
     });
     setIsModalOpen(true);
   };
@@ -282,11 +282,11 @@ const matchesSearch =
                           </p>
                         )}
                       </div>
-{deal.products_c && deal.products_c.length > 0 && (
+{deal.products_c && (typeof deal.products_c === 'string' ? deal.products_c : (Array.isArray(deal.products_c) ? deal.products_c.join(',') : "")).length > 0 && (
                         <div className="mt-3">
                           <p className="text-xs text-gray-500 mb-2">Products</p>
                           <div className="flex flex-wrap gap-1">
-                            {deal.products_c.split(',').map((product, index) => (
+                            {(typeof deal.products_c === 'string' ? deal.products_c : (Array.isArray(deal.products_c) ? deal.products_c.join(',') : "")).split(',').map((product, index) => (
                               <Badge key={index} variant="default" className="text-xs">
                                 {product.trim()}
                               </Badge>
@@ -430,9 +430,10 @@ required
                   <label key={product} className="flex items-center space-x-2">
 <input
                       type="checkbox"
-                      checked={formData.products_c ? formData.products_c.split(',').map(p => p.trim()).includes(product) : false}
+                      checked={formData.products_c ? (typeof formData.products_c === 'string' ? formData.products_c : (Array.isArray(formData.products_c) ? formData.products_c.join(',') : "")).split(',').map(p => p.trim()).includes(product) : false}
                       onChange={(e) => {
-                        const currentProducts = formData.products_c ? formData.products_c.split(',').map(p => p.trim()) : [];
+                        const productsString = typeof formData.products_c === 'string' ? formData.products_c : (Array.isArray(formData.products_c) ? formData.products_c.join(',') : "");
+                        const currentProducts = productsString ? productsString.split(',').map(p => p.trim()) : [];
                         if (e.target.checked) {
                           const newProducts = [...currentProducts, product];
                           setFormData({
