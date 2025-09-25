@@ -137,9 +137,29 @@ class LeadService {
             if (record.message) toast.error(record.message);
           });
         }
-        
-        if (successful.length > 0) {
+if (successful.length > 0) {
           toast.success("Lead created successfully!");
+          
+          // Send Slack notification for new lead
+          try {
+            const { ApperClient } = window.ApperSDK;
+            const apperClient = new ApperClient({
+              apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+              apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+            });
+            
+            await apperClient.functions.invoke(import.meta.env.VITE_SEND_SLACK_NOTIFICATION, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(successful[0].data)
+            });
+          } catch (notificationError) {
+            console.error('Failed to send Slack notification:', notificationError);
+            // Don't throw error - lead creation should succeed even if notification fails
+          }
+          
           return successful[0].data;
         }
       }
