@@ -31,7 +31,7 @@ const [selectedDeal, setSelectedDeal] = useState(null);
     handleEdit(deal);
   };
   
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     title_c: "",
     contact_id_c: "",
     account_id_c: "",
@@ -40,7 +40,8 @@ const [selectedDeal, setSelectedDeal] = useState(null);
     stage_c: "New",
     expected_close_date_c: "",
     notes_c: "",
-products_c: ""
+    products_c: "",
+    sales_rep_c: ""
   });
   const [errors, setErrors] = useState({});
 
@@ -88,8 +89,9 @@ const resetForm = () => {
       probability_c: 50,
       stage_c: "New",
       expected_close_date_c: "",
-      notes_c: "",
-products_c: ""
+notes_c: "",
+      products_c: "",
+      sales_rep_c: ""
     });
     setSelectedDeal(null);
   };
@@ -129,7 +131,8 @@ setFormData({
       stage_c: deal.stage_c,
       expected_close_date_c: deal.expected_close_date_c ? deal.expected_close_date_c.split('T')[0] : "",
       notes_c: deal.notes_c || "",
-products_c: typeof deal.products_c === 'string' ? deal.products_c : (Array.isArray(deal.products_c) ? deal.products_c.join(',') : "")
+      products_c: typeof deal.products_c === 'string' ? deal.products_c : (Array.isArray(deal.products_c) ? deal.products_c.join(',') : ""),
+      sales_rep_c: deal.sales_rep_c || ""
     });
     setIsModalOpen(true);
   };
@@ -235,6 +238,13 @@ const matchesSearch =
                         </div>
                       </div>
 
+<FormField
+                        label="Sales Rep"
+                        value={formData.sales_rep_c}
+                        onChange={(e) => setFormData({...formData, sales_rep_c: e.target.value})}
+                        placeholder="Enter sales representative name"
+                      />
+                      
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Deal Value</p>
@@ -374,7 +384,11 @@ required
                 placeholder="Enter account ID"
               />
             </div>
-            
+{deal.salesRep && (
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Sales Rep:</span> {deal.salesRep}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
