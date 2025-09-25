@@ -23,15 +23,15 @@ const Leads = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    jobTitle: "",
-    industry: "",
-    leadSource: "",
-    status: "New"
+first_name_c: "",
+    last_name_c: "",
+    email_c: "",
+    phone_c: "",
+    company_c: "",
+    job_title_c: "",
+    industry_c: "",
+    lead_source_c: "",
+    status_c: "New"
   });
 
   const statuses = ["All", "New", "Contacted", "Qualified", "Unqualified"];
@@ -56,16 +56,16 @@ const Leads = () => {
   }, []);
 
   const resetForm = () => {
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      company: "",
-      jobTitle: "",
-      industry: "",
-      leadSource: "",
-      status: "New"
+setFormData({
+      first_name_c: "",
+      last_name_c: "",
+      email_c: "",
+      phone_c: "",
+      company_c: "",
+      job_title_c: "",
+      industry_c: "",
+      lead_source_c: "",
+      status_c: "New"
     });
     setSelectedLead(null);
   };
@@ -91,15 +91,15 @@ const Leads = () => {
   const handleEdit = (lead) => {
     setSelectedLead(lead);
     setFormData({
-      firstName: lead.firstName,
-      lastName: lead.lastName,
-      email: lead.email,
-      phone: lead.phone,
-      company: lead.company,
-      jobTitle: lead.jobTitle,
-      industry: lead.industry,
-      leadSource: lead.leadSource,
-      status: lead.status
+first_name_c: lead.first_name_c,
+      last_name_c: lead.last_name_c,
+      email_c: lead.email_c,
+      phone_c: lead.phone_c,
+      company_c: lead.company_c,
+      job_title_c: lead.job_title_c,
+      industry_c: lead.industry_c,
+      lead_source_c: lead.lead_source_c,
+      status_c: lead.status_c
     });
     setIsModalOpen(true);
   };
@@ -117,12 +117,12 @@ const Leads = () => {
   };
 
   const filteredLeads = leads.filter(lead => {
-    const matchesSearch = 
-      lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = selectedStatus === "All" || lead.status === selectedStatus;
+const matchesSearch = 
+      lead.first_name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.last_name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.email_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.company_c?.toLowerCase().includes(searchTerm.toLowerCase());
+const matchesStatus = selectedStatus === "All" || lead.status_c === selectedStatus;
     return matchesSearch && matchesStatus;
   });
 
@@ -188,9 +188,9 @@ const Leads = () => {
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900">
-                            {lead.firstName} {lead.lastName}
+{lead.first_name_c} {lead.last_name_c}
                           </h3>
-                          <p className="text-sm text-gray-500">{lead.jobTitle} at {lead.company}</p>
+                          <p className="text-sm text-gray-500">{lead.job_title_c} at {lead.company_c}</p>
                         </div>
                       </div>
                       
@@ -198,39 +198,39 @@ const Leads = () => {
                         <div>
                           <p className="text-sm text-gray-600">
                             <ApperIcon name="Mail" className="inline h-4 w-4 mr-2" />
-                            {lead.email}
+{lead.email_c}
                           </p>
                           <p className="text-sm text-gray-600 mt-1">
                             <ApperIcon name="Phone" className="inline h-4 w-4 mr-2" />
-                            {lead.phone}
+{lead.phone_c}
                           </p>
                         </div>
                         <div>
                           <p className="text-sm text-gray-600">
                             <ApperIcon name="Building" className="inline h-4 w-4 mr-2" />
-                            {lead.industry}
+{lead.industry_c}
                           </p>
                           <p className="text-sm text-gray-600 mt-1">
                             <ApperIcon name="Target" className="inline h-4 w-4 mr-2" />
-                            {lead.leadSource}
+{lead.lead_source_c}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between mt-4">
                         <div className="flex items-center space-x-3">
-                          <Badge variant={lead.status.toLowerCase()}>
-                            {lead.status}
+<Badge variant={lead.status_c ? lead.status_c.toLowerCase() : 'default'}>
+                            {lead.status_c}
                           </Badge>
                           <div className="flex items-center space-x-1">
                             <ApperIcon name="Star" className="h-4 w-4 text-warning-500" />
                             <span className="text-sm font-medium text-gray-700">
-                              Score: {lead.score}
+Score: {lead.score_c}
                             </span>
                           </div>
                         </div>
                         <p className="text-xs text-gray-400">
-                          Added {format(new Date(lead.createdDate), "MMM d, yyyy")}
+Added {format(new Date(lead.created_date_c), "MMM d, yyyy")}
                         </p>
                       </div>
                     </div>
@@ -274,15 +274,15 @@ const Leads = () => {
               <FormField
                 label="First Name"
                 required
-                value={formData.firstName}
-                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+value={formData.first_name_c}
+                onChange={(e) => setFormData({...formData, first_name_c: e.target.value})}
                 placeholder="Enter first name"
               />
               <FormField
                 label="Last Name"
                 required
-                value={formData.lastName}
-                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+value={formData.last_name_c}
+                onChange={(e) => setFormData({...formData, last_name_c: e.target.value})}
                 placeholder="Enter last name"
               />
             </div>
@@ -292,14 +292,14 @@ const Leads = () => {
                 label="Email"
                 type="email"
                 required
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+value={formData.email_c}
+                onChange={(e) => setFormData({...formData, email_c: e.target.value})}
                 placeholder="Enter email address"
               />
               <FormField
                 label="Phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+value={formData.phone_c}
+                onChange={(e) => setFormData({...formData, phone_c: e.target.value})}
                 placeholder="Enter phone number"
               />
             </div>
@@ -308,23 +308,24 @@ const Leads = () => {
               <FormField
                 label="Company"
                 required
-                value={formData.company}
-                onChange={(e) => setFormData({...formData, company: e.target.value})}
+value={formData.company_c}
+                onChange={(e) => setFormData({...formData, company_c: e.target.value})}
                 placeholder="Enter company name"
               />
               <FormField
                 label="Job Title"
                 value={formData.jobTitle}
-                onChange={(e) => setFormData({...formData, jobTitle: e.target.value})}
+onChange={(e) => setFormData({...formData, job_title_c: e.target.value})}
                 placeholder="Enter job title"
+                value={formData.job_title_c}
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField label="Industry">
                 <select
-                  value={formData.industry}
-                  onChange={(e) => setFormData({...formData, industry: e.target.value})}
+value={formData.industry_c}
+                  onChange={(e) => setFormData({...formData, industry_c: e.target.value})}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="">Select industry</option>
@@ -335,9 +336,9 @@ const Leads = () => {
               </FormField>
 
               <FormField label="Lead Source">
-                <select
-                  value={formData.leadSource}
-                  onChange={(e) => setFormData({...formData, leadSource: e.target.value})}
+<select
+                  value={formData.lead_source_c}
+                  onChange={(e) => setFormData({...formData, lead_source_c: e.target.value})}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="">Select source</option>
@@ -347,10 +348,10 @@ const Leads = () => {
                 </select>
               </FormField>
 
-              <FormField label="Status">
+<FormField label="Status">
                 <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({...formData, status: e.target.value})}
+                  value={formData.status_c}
+                  onChange={(e) => setFormData({...formData, status_c: e.target.value})}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="New">New</option>

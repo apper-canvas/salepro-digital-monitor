@@ -15,6 +15,14 @@ import Layout from "@/components/organisms/Layout";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 import Card from "@/components/atoms/Card";
+import Deals from "@/apper/metadata/tables/lead_c.json";
+import Deals from "@/apper/metadata/tables/deal_c.json";
+import Deals from "@/apper/metadata/tables/client_c.json";
+import Deals from "@/apper/metadata/tables/invoice_c.json";
+import Deals from "@/apper/metadata/tables/contact_c.json";
+import Deals from "@/apper/metadata/tables/activity_c.json";
+import Deals from "@/apper/metadata/edge-functions/";
+import Deals from "@/apper/metadata/edge-functions/secrets.json";
 
 const Deals = () => {
   const navigate = useNavigate();
@@ -28,18 +36,18 @@ const Deals = () => {
   const [selectedDeal, setSelectedDeal] = useState(null);
   const handleCardClick = (deal) => {
     handleEdit(deal);
-  };
-  const [formData, setFormData] = useState({
-    title: "",
-    contactId: "",
-    accountId: "",
-    value: "",
-    probability: 50,
-    stage: "New",
-    expectedCloseDate: "",
-    notes: "",
-    products: []
+const [formData, setFormData] = useState({
+    title_c: "",
+    contact_id_c: "",
+    account_id_c: "",
+    value_c: "",
+    probability_c: 50,
+    stage_c: "New",
+    expected_close_date_c: "",
+    notes_c: "",
+    products_c: []
   });
+  const [errors, setErrors] = useState({});
 
   const stages = ["All", "New", "Qualified", "Proposal", "Negotiation", "Closed Won", "Closed Lost"];
   const productOptions = [
@@ -77,16 +85,16 @@ const Deals = () => {
   }, []);
 
   const resetForm = () => {
-    setFormData({
-      title: "",
-      contactId: "",
-      accountId: "",
-      value: "",
-      probability: 50,
-      stage: "New",
-      expectedCloseDate: "",
-      notes: "",
-      products: []
+setFormData({
+      title_c: "",
+      contact_id_c: "",
+      account_id_c: "",
+      value_c: "",
+      probability_c: 50,
+      stage_c: "New",
+      expected_close_date_c: "",
+      notes_c: "",
+      products_c: []
     });
     setSelectedDeal(null);
   };
@@ -95,9 +103,9 @@ const Deals = () => {
     e.preventDefault();
     try {
       const dealData = {
-        ...formData,
-        value: parseFloat(formData.value) || 0,
-        probability: parseInt(formData.probability) || 50
+...formData,
+        value_c: parseFloat(formData.value_c) || 0,
+        probability_c: parseInt(formData.probability_c) || 50
       };
 
       if (selectedDeal) {
@@ -118,15 +126,15 @@ const Deals = () => {
   const handleEdit = (deal) => {
     setSelectedDeal(deal);
     setFormData({
-      title: deal.title,
-      contactId: deal.contactId,
-      accountId: deal.accountId,
-      value: deal.value.toString(),
-      probability: deal.probability,
-      stage: deal.stage,
-      expectedCloseDate: deal.expectedCloseDate ? deal.expectedCloseDate.split('T')[0] : "",
-      notes: deal.notes || "",
-      products: deal.products || []
+title_c: deal.title_c,
+      contact_id_c: deal.contact_id_c,
+      account_id_c: deal.account_id_c,
+      value_c: deal.value_c ? deal.value_c.toString() : "",
+      probability_c: deal.probability_c,
+      stage_c: deal.stage_c,
+      expected_close_date_c: deal.expected_close_date_c ? deal.expected_close_date_c.split('T')[0] : "",
+      notes_c: deal.notes_c || "",
+      products_c: deal.products_c || ""
     });
     setIsModalOpen(true);
   };
@@ -144,21 +152,21 @@ const Deals = () => {
   };
 
   const getContactName = (contactId) => {
-    const contact = contacts.find(c => c.Id === parseInt(contactId));
-    return contact ? `${contact.firstName} ${contact.lastName}` : "Unknown Contact";
+const contact = contacts.find(c => c.Id === parseInt(contactId));
+return contact ? `${contact.first_name_c} ${contact.last_name_c}` : "Unknown Contact";
   };
 
   const getContactCompany = (contactId) => {
-    const contact = contacts.find(c => c.Id === parseInt(contactId));
-    return contact ? contact.company : "Unknown Company";
+const contact = contacts.find(c => c.Id === parseInt(contactId));
+return contact ? contact.company_c : "Unknown Company";
   };
 
   const filteredDeals = deals.filter(deal => {
     const matchesSearch = 
-      deal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getContactName(deal.contactId).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getContactCompany(deal.contactId).toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStage = selectedStage === "All" || deal.stage === selectedStage;
+deal.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getContactName(deal.contact_id_c)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getContactCompany(deal.contact_id_c)?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStage = selectedStage === "All" || deal.stage_c === selectedStage;
     return matchesSearch && matchesStage;
   });
 
@@ -225,9 +233,9 @@ const Deals = () => {
                           <ApperIcon name="Handshake" className="h-5 w-5 text-success-600" />
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{deal.title}</h3>
+<h3 className="text-lg font-semibold text-gray-900">{deal.title_c}</h3>
                           <p className="text-sm text-gray-500">
-                            {getContactName(deal.contactId)} at {getContactCompany(deal.contactId)}
+                            {getContactName(deal.contact_id_c)} at {getContactCompany(deal.contact_id_c)}
                           </p>
                         </div>
                       </div>
@@ -236,7 +244,7 @@ const Deals = () => {
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Deal Value</p>
                           <p className="text-2xl font-bold text-gray-900">
-                            ${deal.value.toLocaleString()}
+${(deal.value_c || 0).toLocaleString()}
                           </p>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg">
@@ -244,59 +252,59 @@ const Deals = () => {
                           <div className="flex items-center space-x-2">
                             <div className="flex-1 bg-gray-200 rounded-full h-2">
                               <div 
-                                className="bg-primary-600 rounded-full h-2 transition-all duration-300"
-                                style={{ width: `${deal.probability}%` }}
+className="bg-primary-600 rounded-full h-2 transition-all duration-300"
+style={{ width: `${deal.probability_c}%` }}
                               />
                             </div>
                             <span className="text-sm font-medium text-gray-900">
-                              {deal.probability}%
+{deal.probability_c}%
                             </span>
                           </div>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Expected Close</p>
-                          <p className="text-sm font-medium text-gray-900">
-                            {format(new Date(deal.expectedCloseDate), "MMM d, yyyy")}
+<p className="text-sm font-medium text-gray-900">
+                            {format(new Date(deal.expected_close_date_c), "MMM d, yyyy")}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <Badge variant={deal.stage.toLowerCase().replace(" ", "")}>
-                            {deal.stage}
+<Badge variant={deal.stage_c ? deal.stage_c.toLowerCase().replace(" ", "") : 'default'}>
+                            {deal.stage_c}
                           </Badge>
-                          <Badge variant={
-                            deal.status === "Open" ? "primary" : 
-                            deal.status === "Won" ? "success" : "error"
+<Badge variant={
+                            deal.status_c === "Open" ? "primary" : 
+                            deal.status_c === "Won" ? "success" : "error"
                           }>
-                            {deal.status}
+                            {deal.status_c}
                           </Badge>
                         </div>
                         
-                        {deal.actualCloseDate && (
+{deal.actual_close_date_c && (
                           <p className="text-xs text-gray-400">
-                            Closed: {format(new Date(deal.actualCloseDate), "MMM d, yyyy")}
+                            Closed: {format(new Date(deal.actual_close_date_c), "MMM d, yyyy")}
                           </p>
                         )}
                       </div>
 
-                      {deal.products && deal.products.length > 0 && (
+{deal.products_c && deal.products_c.length > 0 && (
                         <div className="mt-3">
                           <p className="text-xs text-gray-500 mb-2">Products</p>
                           <div className="flex flex-wrap gap-1">
-                            {deal.products.map((product, index) => (
+{deal.products_c.split(',').map((product, index) => (
                               <Badge key={index} variant="default" className="text-xs">
-                                {product}
+                                {product.trim()}
                               </Badge>
                             ))}
                           </div>
                         </div>
                       )}
 
-                      {deal.notes && (
+{deal.notes_c && (
                         <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                          <p className="text-sm text-gray-700">{deal.notes}</p>
+                          <p className="text-sm text-gray-700">{deal.notes_c}</p>
                         </div>
                       )}
                     </div>
@@ -339,8 +347,8 @@ const Deals = () => {
             <FormField
               label="Deal Title"
               required
-              value={formData.title}
-              onChange={(e) => setFormData({...formData, title: e.target.value})}
+value={formData.title_c}
+              onChange={(e) => setFormData({...formData, title_c: e.target.value})}
               placeholder="Enter deal title"
             />
 {/* PLACEHOLDER - Need more context to determine correct JSX element */}
@@ -349,27 +357,36 @@ const Deals = () => {
               <FormField label="Contact">
                 <select
                   required
-                  value={formData.contactId}
+value={formData.contact_id_c}
                   onChange={(e) => {
                     const contactId = e.target.value;
                     const selectedContact = contacts.find(contact => contact.Id === parseInt(contactId));
                     setFormData({
                       ...formData, 
-                      contactId,
-                      accountId: selectedContact ? selectedContact.company : formData.accountId
+                      contact_id_c: contactId,
+                      account_id_c: selectedContact ? selectedContact.company_c : formData.account_id_c
                     });
                   }}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="">Select contact</option>
-                  {contacts.map(contact => (
+{contacts.map(contact => (
                     <option key={contact.Id} value={contact.Id}>
-                      {contact.firstName} {contact.lastName} - {contact.company}
+                      {contact.first_name_c} {contact.last_name_c} - {contact.company_c}
                     </option>
                   ))}
                 </select>
               </FormField>
 
+<FormField
+                label="Account ID"
+                value={formData.account_id_c}
+                onChange={(e) => setFormData({...formData, account_id_c: e.target.value})}
+                placeholder="Enter account ID"
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Account/Company"
                 value={formData.accountId}
@@ -382,8 +399,9 @@ const Deals = () => {
               <FormField
                 label="Deal Value ($)"
                 type="number"
-                required
-                value={formData.value}
+required
+                value={formData.value_c}
+                onChange={(e) => setFormData({...formData, value_c: e.target.value})}
                 onChange={(e) => setFormData({...formData, value: e.target.value})}
                 placeholder="0.00"
               />
@@ -395,20 +413,20 @@ const Deals = () => {
                     min="0"
                     max="100"
                     step="5"
-                    value={formData.probability}
-                    onChange={(e) => setFormData({...formData, probability: parseInt(e.target.value)})}
+value={formData.probability_c}
+                    onChange={(e) => setFormData({...formData, probability_c: parseInt(e.target.value)})}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                   />
                   <div className="text-center text-sm font-medium text-gray-900">
-                    {formData.probability}%
+{formData.probability_c}%
                   </div>
                 </div>
               </FormField>
 
               <FormField label="Stage">
                 <select
-                  value={formData.stage}
-                  onChange={(e) => setFormData({...formData, stage: e.target.value})}
+value={formData.stage_c}
+                  onChange={(e) => setFormData({...formData, stage_c: e.target.value})}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   {stages.slice(1).map(stage => (
@@ -422,8 +440,8 @@ const Deals = () => {
               label="Expected Close Date"
               type="date"
               required
-              value={formData.expectedCloseDate}
-              onChange={(e) => setFormData({...formData, expectedCloseDate: e.target.value})}
+value={formData.expected_close_date_c}
+              onChange={(e) => setFormData({...formData, expected_close_date_c: e.target.value})}
             />
 
             <FormField label="Products">
@@ -433,16 +451,19 @@ const Deals = () => {
                     <input
                       type="checkbox"
                       checked={formData.products.includes(product)}
-                      onChange={(e) => {
+onChange={(e) => {
+                        const currentProducts = formData.products_c ? formData.products_c.split(',').map(p => p.trim()) : [];
                         if (e.target.checked) {
+                          const newProducts = [...currentProducts, product];
                           setFormData({
                             ...formData,
-                            products: [...formData.products, product]
+                            products_c: newProducts.join(',')
                           });
                         } else {
+                          const newProducts = currentProducts.filter(p => p !== product);
                           setFormData({
                             ...formData,
-                            products: formData.products.filter(p => p !== product)
+                            products_c: newProducts.join(',')
                           });
                         }
                       }}
@@ -456,8 +477,8 @@ const Deals = () => {
 
             <FormField label="Notes">
               <textarea
-                value={formData.notes}
-                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+value={formData.notes_c}
+                onChange={(e) => setFormData({...formData, notes_c: e.target.value})}
                 placeholder="Add any notes about this deal..."
                 rows={3}
                 className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"

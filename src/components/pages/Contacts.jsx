@@ -22,16 +22,16 @@ const Contacts = () => {
   const [selectedRelationship, setSelectedRelationship] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    jobTitle: "",
-    accountId: "",
-    relationshipLevel: "Contact",
-    notes: ""
+const [formData, setFormData] = useState({
+    first_name_c: "",
+    last_name_c: "",
+    email_c: "",
+    phone_c: "",
+    company_c: "",
+    job_title_c: "",
+    account_id_c: "",
+    relationship_level_c: "Decision Maker",
+    notes_c: ""
   });
 
   const relationships = ["All", "Decision Maker", "Influencer", "Champion", "Technical Evaluator", "Contact"];
@@ -54,16 +54,16 @@ const Contacts = () => {
   }, []);
 
   const resetForm = () => {
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      company: "",
-      jobTitle: "",
-      accountId: "",
-      relationshipLevel: "Contact",
-      notes: ""
+setFormData({
+      first_name_c: "",
+      last_name_c: "",
+      email_c: "",
+      phone_c: "",
+      company_c: "",
+      job_title_c: "",
+      account_id_c: "",
+      relationship_level_c: "Decision Maker",
+      notes_c: ""
     });
     setSelectedContact(null);
   };
@@ -89,15 +89,15 @@ const Contacts = () => {
   const handleEdit = (contact) => {
     setSelectedContact(contact);
     setFormData({
-      firstName: contact.firstName,
-      lastName: contact.lastName,
-      email: contact.email,
-      phone: contact.phone,
-      company: contact.company,
-      jobTitle: contact.jobTitle,
-      accountId: contact.accountId,
-      relationshipLevel: contact.relationshipLevel,
-      notes: contact.notes || ""
+first_name_c: contact.first_name_c,
+      last_name_c: contact.last_name_c,
+      email_c: contact.email_c,
+      phone_c: contact.phone_c,
+      company_c: contact.company_c,
+      job_title_c: contact.job_title_c,
+      account_id_c: contact.account_id_c,
+      relationship_level_c: contact.relationship_level_c,
+      notes_c: contact.notes_c || ""
     });
     setIsModalOpen(true);
   };
@@ -115,12 +115,12 @@ const Contacts = () => {
   };
 
   const filteredContacts = contacts.filter(contact => {
-    const matchesSearch = 
-      contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRelationship = selectedRelationship === "All" || contact.relationshipLevel === selectedRelationship;
+const matchesSearch = 
+      contact.first_name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact.last_name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact.email_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact.company_c?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRelationship = selectedRelationship === "All" || contact.relationship_level_c === selectedRelationship;
     return matchesSearch && matchesRelationship;
   });
 
@@ -186,9 +186,9 @@ const Contacts = () => {
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900">
-                            {contact.firstName} {contact.lastName}
+{contact.first_name_c} {contact.last_name_c}
                           </h3>
-                          <p className="text-sm text-gray-500">{contact.jobTitle} at {contact.company}</p>
+                          <p className="text-sm text-gray-500">{contact.job_title_c} at {contact.company_c}</p>
                         </div>
                       </div>
                       
@@ -196,40 +196,40 @@ const Contacts = () => {
                         <div>
                           <p className="text-sm text-gray-600">
                             <ApperIcon name="Mail" className="inline h-4 w-4 mr-2" />
-                            {contact.email}
+{contact.email_c}
                           </p>
                           <p className="text-sm text-gray-600 mt-1">
                             <ApperIcon name="Phone" className="inline h-4 w-4 mr-2" />
-                            {contact.phone}
+{contact.phone_c}
                           </p>
                         </div>
                         <div>
                           <p className="text-sm text-gray-600">
                             <ApperIcon name="Building" className="inline h-4 w-4 mr-2" />
-                            Account ID: {contact.accountId}
+Account ID: {contact.account_id_c}
                           </p>
                           <p className="text-sm text-gray-600 mt-1">
                             <ApperIcon name="Calendar" className="inline h-4 w-4 mr-2" />
-                            Last: {format(new Date(contact.lastInteraction), "MMM d, yyyy")}
+Last: {format(new Date(contact.last_interaction_c), "MMM d, yyyy")}
                           </p>
                         </div>
                       </div>
 
-                      {contact.notes && (
+{contact.notes_c && (
                         <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                          <p className="text-sm text-gray-700">{contact.notes}</p>
+                          <p className="text-sm text-gray-700">{contact.notes_c}</p>
                         </div>
                       )}
 
                       <div className="flex items-center justify-between mt-4">
                         <Badge 
                           variant={
-                            contact.relationshipLevel === "Decision Maker" ? "success" :
+contact.relationship_level_c === "Decision Maker" ? "success" :
                             contact.relationshipLevel === "Champion" ? "primary" :
                             contact.relationshipLevel === "Influencer" ? "warning" : "default"
                           }
                         >
-                          {contact.relationshipLevel}
+{contact.relationship_level_c}
                         </Badge>
                       </div>
                     </div>
@@ -273,15 +273,15 @@ const Contacts = () => {
               <FormField
                 label="First Name"
                 required
-                value={formData.firstName}
-                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+value={formData.first_name_c}
+                onChange={(e) => setFormData({...formData, first_name_c: e.target.value})}
                 placeholder="Enter first name"
               />
               <FormField
                 label="Last Name"
                 required
-                value={formData.lastName}
-                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+value={formData.last_name_c}
+                onChange={(e) => setFormData({...formData, last_name_c: e.target.value})}
                 placeholder="Enter last name"
               />
             </div>
@@ -291,14 +291,14 @@ const Contacts = () => {
                 label="Email"
                 type="email"
                 required
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+value={formData.email_c}
+                onChange={(e) => setFormData({...formData, email_c: e.target.value})}
                 placeholder="Enter email address"
               />
               <FormField
                 label="Phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+value={formData.phone_c}
+                onChange={(e) => setFormData({...formData, phone_c: e.target.value})}
                 placeholder="Enter phone number"
               />
             </div>
@@ -307,29 +307,30 @@ const Contacts = () => {
               <FormField
                 label="Company"
                 required
-                value={formData.company}
-                onChange={(e) => setFormData({...formData, company: e.target.value})}
+value={formData.company_c}
+                onChange={(e) => setFormData({...formData, company_c: e.target.value})}
                 placeholder="Enter company name"
               />
               <FormField
                 label="Job Title"
                 value={formData.jobTitle}
-                onChange={(e) => setFormData({...formData, jobTitle: e.target.value})}
+onChange={(e) => setFormData({...formData, job_title_c: e.target.value})}
                 placeholder="Enter job title"
+                value={formData.job_title_c}
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Account ID"
-                value={formData.accountId}
-                onChange={(e) => setFormData({...formData, accountId: e.target.value})}
+value={formData.account_id_c}
+                onChange={(e) => setFormData({...formData, account_id_c: e.target.value})}
                 placeholder="Enter account ID"
               />
               <FormField label="Relationship Level">
                 <select
-                  value={formData.relationshipLevel}
-                  onChange={(e) => setFormData({...formData, relationshipLevel: e.target.value})}
+value={formData.relationship_level_c}
+                  onChange={(e) => setFormData({...formData, relationship_level_c: e.target.value})}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   {relationships.slice(1).map(relationship => (
@@ -340,8 +341,9 @@ const Contacts = () => {
             </div>
 
             <FormField label="Notes">
-              <textarea
-                value={formData.notes}
+<textarea
+                value={formData.notes_c}
+                onChange={(e) => setFormData({...formData, notes_c: e.target.value})}
                 onChange={(e) => setFormData({...formData, notes: e.target.value})}
                 placeholder="Add any notes about this contact..."
                 rows={3}

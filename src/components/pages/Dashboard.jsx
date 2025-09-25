@@ -53,26 +53,26 @@ const Dashboard = () => {
   if (error) return <Layout><Error message={error} onRetry={loadDashboardData} /></Layout>;
 
   const totalLeads = data.leads.length;
-  const qualifiedLeads = data.leads.filter(lead => lead.status === "Qualified").length;
+const qualifiedLeads = data.leads.filter(lead => lead.status_c === "Qualified").length;
   const totalDeals = data.deals.length;
-  const openDeals = data.deals.filter(deal => deal.status === "Open").length;
+  const openDeals = data.deals.filter(deal => deal.status_c === "Open").length;
   const totalRevenue = data.deals
-    .filter(deal => deal.status === "Won")
-    .reduce((sum, deal) => sum + deal.value, 0);
-  const pendingInvoices = data.invoices.filter(invoice => invoice.status === "Pending").length;
+    .filter(deal => deal.status_c === "Won")
+    .reduce((sum, deal) => sum + (deal.value_c || 0), 0);
+  const pendingInvoices = data.invoices.filter(invoice => invoice.status_c === "Pending").length;
   
   const recentActivities = data.activities.slice(0, 5);
   const upcomingDeals = data.deals
-    .filter(deal => deal.status === "Open")
-    .sort((a, b) => new Date(a.expectedCloseDate) - new Date(b.expectedCloseDate))
+    .filter(deal => deal.status_c === "Open")
+    .sort((a, b) => new Date(a.expected_close_date_c) - new Date(b.expected_close_date_c))
     .slice(0, 5);
 
-  const pipelineData = {
-    "New": data.deals.filter(deal => deal.stage === "New").length,
-    "Qualified": data.deals.filter(deal => deal.stage === "Qualified").length,
-    "Proposal": data.deals.filter(deal => deal.stage === "Proposal").length,
-    "Negotiation": data.deals.filter(deal => deal.stage === "Negotiation").length,
-    "Closed Won": data.deals.filter(deal => deal.stage === "Closed Won").length
+const pipelineData = {
+    "New": data.deals.filter(deal => deal.stage_c === "New").length,
+    "Qualified": data.deals.filter(deal => deal.stage_c === "Qualified").length,
+    "Proposal": data.deals.filter(deal => deal.stage_c === "Proposal").length,
+    "Negotiation": data.deals.filter(deal => deal.stage_c === "Negotiation").length,
+    "Closed Won": data.deals.filter(deal => deal.stage_c === "Closed Won").length
   };
 
   return (
@@ -154,23 +154,23 @@ const Dashboard = () => {
             </Card.Header>
             <Card.Content>
               <div className="space-y-4">
-                {recentActivities.map((activity) => (
+{recentActivities.map((activity) => (
                   <div key={activity.Id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
                     <div className="bg-primary-100 p-2 rounded-full">
                       <ApperIcon 
-                        name={activity.type === "Call" ? "Phone" : activity.type === "Meeting" ? "Calendar" : "Mail"} 
+                        name={activity.type_c === "Call" ? "Phone" : activity.type_c === "Meeting" ? "Calendar" : "Mail"} 
                         className="h-4 w-4 text-primary-600" 
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900">{activity.subject}</p>
-                      <p className="text-sm text-gray-500 truncate">{activity.description}</p>
+                      <p className="font-medium text-gray-900">{activity.subject_c}</p>
+                      <p className="text-sm text-gray-500 truncate">{activity.description_c}</p>
                       <div className="flex items-center space-x-2 mt-1">
-                        <Badge variant={activity.type.toLowerCase()}>
-                          {activity.type}
+                        <Badge variant={activity.type_c ? activity.type_c.toLowerCase() : 'default'}>
+                          {activity.type_c}
                         </Badge>
                         <span className="text-xs text-gray-400">
-                          {format(new Date(activity.date), "MMM d, h:mm a")}
+                          {format(new Date(activity.date_c), "MMM d, h:mm a")}
                         </span>
                       </div>
                     </div>
@@ -200,25 +200,25 @@ const Dashboard = () => {
             </Card.Header>
             <Card.Content>
               <div className="space-y-4">
-                {upcomingDeals.map((deal) => (
+{upcomingDeals.map((deal) => (
                   <div key={deal.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">{deal.title}</p>
+                      <p className="font-medium text-gray-900">{deal.title_c}</p>
                       <p className="text-sm text-gray-500">
-                        Expected close: {format(new Date(deal.expectedCloseDate), "MMM d, yyyy")}
+                        Expected close: {format(new Date(deal.expected_close_date_c), "MMM d, yyyy")}
                       </p>
                       <div className="flex items-center space-x-2 mt-1">
-                        <Badge variant={deal.stage.toLowerCase().replace(" ", "")}>
-                          {deal.stage}
+                        <Badge variant={deal.stage_c ? deal.stage_c.toLowerCase().replace(" ", "") : 'default'}>
+                          {deal.stage_c}
                         </Badge>
                         <span className="text-xs text-gray-400">
-                          {deal.probability}% probability
+                          {deal.probability_c}% probability
                         </span>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-gray-900">
-                        ${(deal.value / 1000).toFixed(0)}K
+                        ${((deal.value_c || 0) / 1000).toFixed(0)}K
                       </p>
                     </div>
                   </div>
