@@ -89,10 +89,7 @@ region: response.data.region_c,
       };
     } catch (error) {
       console.error(`Error fetching sales team ${id}:`, error?.response?.data?.message || error);
-      return null;
-} catch (error) {
-      console.error(`Error fetching sales team ${id}:`, error?.response?.data?.message || error);
-      return null;
+return null;
     }
   }
 
@@ -159,7 +156,10 @@ return null;
         }
       }
     } catch (error) {
-      console.error("Error initializing default sales teams:", error);
+console.error("Error initializing default sales teams:", error);
+    }
+  }
+}
 
 const salesTeamService = new SalesTeamService();
 export default salesTeamService;
