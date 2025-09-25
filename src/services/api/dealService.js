@@ -26,10 +26,15 @@ class DealService {
     return { ...newDeal };
   }
 
-  async update(id, updateData) {
+async update(id, updateData) {
     await this.delay();
     const index = this.deals.findIndex(deal => deal.Id === parseInt(id));
     if (index !== -1) {
+      // If stage is being updated and no stageUpdatedAt provided, add timestamp
+      if (updateData.stage && !updateData.stageUpdatedAt) {
+        updateData.stageUpdatedAt = new Date().toISOString();
+      }
+      
       this.deals[index] = { ...this.deals[index], ...updateData };
       return { ...this.deals[index] };
     }

@@ -50,9 +50,23 @@ const Pipeline = () => {
     loadPipelineData();
   }, []);
 
+// Stage to probability mapping
+  const stageProbabilityMap = {
+    "New": 10,
+    "Qualified": 25,
+    "Proposal": 50,
+    "Negotiation": 75,
+    "Closed Won": 100,
+    "Closed Lost": 0
+  };
+
   const handleStageChange = async (dealId, newStage) => {
     try {
-      const updateData = { stage: newStage };
+      const updateData = { 
+        stage: newStage,
+        probability: stageProbabilityMap[newStage] || 0,
+        stageUpdatedAt: new Date().toISOString()
+      };
       
       // If moving to Closed Won or Closed Lost, update status and actual close date
       if (newStage === "Closed Won") {
@@ -67,10 +81,36 @@ const Pipeline = () => {
       }
 
       await dealService.update(dealId, updateData);
-      toast.success(`Deal moved to ${newStage} successfully!`);
+      toast.success(`Deal moved to ${newStage} successfully! Probability updated to ${updateData.probability}%`);
       loadPipelineData();
     } catch (err) {
       toast.error("Failed to update deal stage. Please try again.");
+    }
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (e, deal) => {
+    e.dataTransfer.setData("text/plain", JSON.stringify({ dealId: deal.Id, sourceStage: deal.stage }));
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = async (e, targetStage) => {
+    e.preventDefault();
+    try {
+      const data = JSON.parse(e.dataTransfer.getData("text/plain"));
+      const { dealId, sourceStage } = data;
+      
+      if (sourceStage !== targetStage) {
+        await handleStageChange(dealId, targetStage);
+      }
+    } catch (err) {
+      console.error("Drag and drop error:", err);
+      toast.error("Failed to move deal. Please try again.");
     }
   };
 
@@ -147,14 +187,18 @@ const Pipeline = () => {
           />
         ) : (
           <div className="overflow-x-auto">
-            <div className="flex space-x-6 min-w-full pb-4">
+<div className="flex space-x-6 min-w-full pb-4">
               {stages.map((stage) => {
                 const stageDeals = getStageDeals(stage);
                 const stageValue = getStageValue(stage);
                 
                 return (
                   <div key={stage} className="flex-shrink-0 w-80">
-                    <div className={`rounded-lg border-2 ${stageColors[stage]} p-4 min-h-[600px]`}>
+                    <div 
+                      className={`rounded-lg border-2 ${stageColors[stage]} p-4 min-h-[600px] transition-all duration-200`}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, stage)}
+                    >
                       <div className="mb-4">
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="font-semibold text-gray-900">{stage}</h3>
@@ -174,7 +218,9 @@ const Pipeline = () => {
                         {stageDeals.map((deal) => (
                           <Card 
                             key={deal.Id} 
-                            className="cursor-move hover:shadow-lg transition-all duration-200 bg-white"
+                            className="cursor-move hover:shadow-lg transition-all duration-200 bg-white active:opacity-75 active:scale-95"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, deal)}
                           >
                             <div className="p-4">
                               <div className="flex items-start justify-between mb-2">
@@ -231,14 +277,21 @@ const Pipeline = () => {
                                   />
                                 </div>
                               </div>
+
+                              {/* Stage updated indicator */}
+                              {deal.stageUpdatedAt && (
+                                <div className="mt-2 text-xs text-gray-400">
+                                  Updated: {format(new Date(deal.stageUpdatedAt), "MMM d, HH:mm")}
+                                </div>
+                              )}
                             </div>
                           </Card>
                         ))}
 
                         {stageDeals.length === 0 && (
-                          <div className="text-center py-8 text-gray-400">
+                          <div className="text-center py-8 text-gray-400 border-2 border-dashed border-gray-300 rounded-lg">
                             <ApperIcon name="Folder" className="h-8 w-8 mx-auto mb-2" />
-                            <p className="text-sm">No deals in {stage}</p>
+                            <p className="text-sm">Drop deals here or add new deals to {stage}</p>
                           </div>
                         )}
                       </div>
