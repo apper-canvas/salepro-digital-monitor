@@ -339,15 +339,35 @@ if (!response.success) {
   }
 
   // Transform database field names to UI-friendly camelCase names
-  transformInvoiceData(invoice) {
+transformInvoiceData(invoice) {
     if (!invoice) return null;
+    
+    // Safe JSON parsing for line items with comprehensive error handling
+    let lineItems = [];
+    if (invoice.line_items_c) {
+      try {
+        // Ensure the field is a string before parsing
+        if (typeof invoice.line_items_c === 'string') {
+          const parsed = JSON.parse(invoice.line_items_c);
+          // Validate that parsed result is an array
+          lineItems = Array.isArray(parsed) ? parsed : [];
+        } else {
+          // Handle case where line_items_c is already an object/array
+          lineItems = Array.isArray(invoice.line_items_c) ? invoice.line_items_c : [];
+        }
+      } catch (error) {
+        console.warn(`Failed to parse line_items_c for invoice ${invoice.Id}:`, error.message);
+        console.warn('Raw line_items_c data:', invoice.line_items_c);
+        lineItems = []; // Fallback to empty array
+      }
+    }
     
     return {
       Id: invoice.Id,
       invoiceNumber: invoice.invoice_number_c || invoice.Name || '',
       issueDate: invoice.issue_date_c || '',
       dueDate: invoice.due_date_c || '',
-      lineItems: invoice.line_items_c ? JSON.parse(invoice.line_items_c) : [],
+      lineItems: lineItems,
       subtotal: parseFloat(invoice.subtotal_c) || 0,
       taxAmount: parseFloat(invoice.tax_amount_c) || 0,
       totalAmount: parseFloat(invoice.total_amount_c) || 0,
