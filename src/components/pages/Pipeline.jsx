@@ -62,22 +62,22 @@ const Pipeline = () => {
 
   const handleStageChange = async (dealId, newStage) => {
     try {
-      const updateData = { 
-        stage: newStage,
-        probability: stageProbabilityMap[newStage] || 0,
-        stageUpdatedAt: new Date().toISOString()
+const updateData = { 
+        stage_c: newStage,
+        probability_c: stageProbabilityMap[newStage] || 0,
+        stage_updated_at_c: new Date().toISOString()
       };
       
       // If moving to Closed Won or Closed Lost, update status and actual close date
       if (newStage === "Closed Won") {
-        updateData.status = "Won";
-        updateData.actualCloseDate = new Date().toISOString();
+        updateData.status_c = "Won";
+        updateData.actual_close_date_c = new Date().toISOString();
       } else if (newStage === "Closed Lost") {
-        updateData.status = "Lost";
-        updateData.actualCloseDate = new Date().toISOString();
+        updateData.status_c = "Lost";
+        updateData.actual_close_date_c = new Date().toISOString();
       } else if (newStage !== "Closed Won" && newStage !== "Closed Lost") {
-        updateData.status = "Open";
-        updateData.actualCloseDate = null;
+        updateData.status_c = "Open";
+        updateData.actual_close_date_c = null;
       }
 
       await dealService.update(dealId, updateData);
@@ -88,9 +88,9 @@ const Pipeline = () => {
     }
   };
 
-  // Drag and drop handlers
+// Drag and drop handlers
   const handleDragStart = (e, deal) => {
-    e.dataTransfer.setData("text/plain", JSON.stringify({ dealId: deal.Id, sourceStage: deal.stage }));
+    e.dataTransfer.setData("text/plain", JSON.stringify({ dealId: deal.Id, sourceStage: deal.stage_c }));
     e.dataTransfer.effectAllowed = "move";
   };
 
@@ -130,10 +130,9 @@ const Pipeline = () => {
   if (loading) return <Layout><Loading /></Layout>;
   if (error) return <Layout><Error message={error} onRetry={loadPipelineData} /></Layout>;
 
-  const totalPipelineValue = deals
-    .filter(deal => deal.status === "Open")
-    .reduce((sum, deal) => sum + (deal.value * (deal.probability / 100)), 0);
-
+const totalPipelineValue = deals
+    .filter(deal => deal.status_c === "Open")
+    .reduce((sum, deal) => sum + (deal.value_c * (deal.probability_c / 100)), 0);
   return (
     <Layout title="Sales Pipeline">
       <div className="space-y-6">
@@ -150,7 +149,7 @@ const Pipeline = () => {
                 <div>
                   <p className="text-sm">Open Deals</p>
                   <p className="text-2xl font-bold text-white">
-                    {deals.filter(d => d.status === "Open").length}
+{deals.filter(d => d.status_c === "Open").length}
                   </p>
                 </div>
                 <div>
@@ -162,7 +161,7 @@ const Pipeline = () => {
                 <div>
                   <p className="text-sm">Avg Deal Size</p>
                   <p className="text-2xl font-bold text-white">
-                    ${deals.length > 0 ? (deals.reduce((sum, deal) => sum + deal.value, 0) / deals.length / 1000).toFixed(0) : 0}K
+${deals.length > 0 ? (deals.reduce((sum, deal) => sum + deal.value_c, 0) / deals.length / 1000).toFixed(0) : 0}K
                   </p>
                 </div>
               </div>
@@ -217,7 +216,7 @@ const Pipeline = () => {
                       <div className="space-y-3">
                         {stageDeals.map((deal) => (
                           <Card 
-                            key={deal.Id} 
+key={deal.Id} 
                             className="cursor-move hover:shadow-lg transition-all duration-200 bg-white active:opacity-75 active:scale-95"
                             draggable
                             onDragStart={(e) => handleDragStart(e, deal)}
@@ -225,11 +224,11 @@ const Pipeline = () => {
                             <div className="p-4">
                               <div className="flex items-start justify-between mb-2">
                                 <h4 className="font-medium text-gray-900 text-sm leading-tight">
-                                  {deal.title}
+{deal.title_c}
                                 </h4>
                                 <div className="flex items-center space-x-1 ml-2">
                                   <select
-                                    value={deal.stage}
+value={deal.stage_c}
                                     onChange={(e) => handleStageChange(deal.Id, e.target.value)}
                                     className="text-xs border border-gray-200 rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500"
                                     onClick={(e) => e.stopPropagation()}
@@ -244,27 +243,27 @@ const Pipeline = () => {
                               </div>
                               
                               <p className="text-xs text-gray-600 mb-2">
-                                {getContactName(deal.contactId)}
+{getContactName(deal.contact_id_c)}
                               </p>
 
                               <div className="flex items-center justify-between">
-                                <span className="text-sm font-bold text-gray-900">
-                                  ${(deal.value / 1000).toFixed(0)}K
+<span className="text-sm font-bold text-gray-900">
+                                  ${(deal.value_c / 1000).toFixed(0)}K
                                 </span>
                                 <span className="text-xs text-gray-500">
-                                  {deal.probability}%
+{deal.probability_c}%
                                 </span>
                               </div>
 
                               <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
                                 <span>
-                                  Close: {format(new Date(deal.expectedCloseDate), "MMM d")}
+Close: {format(new Date(deal.expected_close_date_c), "MMM d")}
                                 </span>
-                                <Badge 
-                                  variant={deal.status === "Open" ? "primary" : deal.status === "Won" ? "success" : "error"}
+<Badge 
+                                  variant={deal.status_c === "Open" ? "primary" : deal.status_c === "Won" ? "success" : "error"}
                                   className="text-xs"
                                 >
-                                  {deal.status}
+                                  {deal.status_c}
                                 </Badge>
                               </div>
 
@@ -272,16 +271,16 @@ const Pipeline = () => {
                               <div className="mt-2">
                                 <div className="bg-gray-200 rounded-full h-1.5">
                                   <div 
-                                    className="bg-primary-600 rounded-full h-1.5 transition-all duration-300"
-                                    style={{ width: `${deal.probability}%` }}
+className="bg-primary-600 rounded-full h-1.5 transition-all duration-300"
+                                    style={{ width: `${deal.probability_c}%` }}
                                   />
                                 </div>
                               </div>
 
                               {/* Stage updated indicator */}
-                              {deal.stageUpdatedAt && (
+{deal.stage_updated_at_c && (
                                 <div className="mt-2 text-xs text-gray-400">
-                                  Updated: {format(new Date(deal.stageUpdatedAt), "MMM d, HH:mm")}
+                                  Updated: {format(new Date(deal.stage_updated_at_c), "MMM d, HH:mm")}
                                 </div>
                               )}
                             </div>

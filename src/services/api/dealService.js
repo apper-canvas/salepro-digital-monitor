@@ -21,7 +21,7 @@ class DealService {
     try {
       if (!this.apperClient) this.initializeClient();
       
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "title_c"}},
@@ -34,7 +34,8 @@ class DealService {
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "products_c"}},
           {"field": {"Name": "notes_c"}},
-          {"field": {"Name": "contact_id_c"}}
+          {"field": {"Name": "contact_id_c"}},
+          {"field": {"Name": "stage_updated_at_c"}}
         ]
       };
       
@@ -46,7 +47,24 @@ class DealService {
         return [];
       }
       
-      return response.data || [];
+// Transform database field names to UI-expected format while preserving all data
+      const transformedData = (response.data || []).map(deal => ({
+        ...deal,
+        title: deal.title_c,
+        accountId: deal.account_id_c,
+        value: deal.value_c,
+        probability: deal.probability_c,
+        stage: deal.stage_c,
+        expectedCloseDate: deal.expected_close_date_c,
+        actualCloseDate: deal.actual_close_date_c,
+        status: deal.status_c,
+        products: deal.products_c,
+        notes: deal.notes_c,
+        contactId: deal.contact_id_c,
+        stageUpdatedAt: deal.stage_updated_at_c
+      }));
+      
+      return transformedData;
     } catch (error) {
       console.error("Error fetching deals:", error?.response?.data?.message || error);
       toast.error("Failed to fetch deals");
@@ -58,7 +76,7 @@ class DealService {
     try {
       if (!this.apperClient) this.initializeClient();
       
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "title_c"}},
@@ -71,7 +89,8 @@ class DealService {
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "products_c"}},
           {"field": {"Name": "notes_c"}},
-          {"field": {"Name": "contact_id_c"}}
+          {"field": {"Name": "contact_id_c"}},
+          {"field": {"Name": "stage_updated_at_c"}}
         ]
       };
       
@@ -82,7 +101,26 @@ class DealService {
         return null;
       }
       
-      return response.data;
+// Transform database field names to UI-expected format
+      if (response.data) {
+        const deal = response.data;
+        return {
+          ...deal,
+          title: deal.title_c,
+          accountId: deal.account_id_c,
+          value: deal.value_c,
+          probability: deal.probability_c,
+          stage: deal.stage_c,
+          expectedCloseDate: deal.expected_close_date_c,
+          actualCloseDate: deal.actual_close_date_c,
+          status: deal.status_c,
+          products: deal.products_c,
+          notes: deal.notes_c,
+          contactId: deal.contact_id_c,
+          stageUpdatedAt: deal.stage_updated_at_c
+        };
+      }
+      return null;
     } catch (error) {
       console.error("Error fetching deal:", error?.response?.data?.message || error);
       return null;
@@ -94,18 +132,19 @@ class DealService {
       if (!this.apperClient) this.initializeClient();
       
       // Only include updateable fields
-      const createData = {
-        Name: dealData.title_c,
-        title_c: dealData.title_c,
-        contact_id_c: parseInt(dealData.contact_id_c),
-        account_id_c: dealData.account_id_c,
-        value_c: parseFloat(dealData.value_c) || 0,
-        probability_c: parseInt(dealData.probability_c) || 50,
-        stage_c: dealData.stage_c || "New",
-        expected_close_date_c: dealData.expected_close_date_c,
-        status_c: dealData.status_c || "Open",
-        products_c: dealData.products_c || "",
-        notes_c: dealData.notes_c || ""
+const createData = {
+        Name: dealData.title_c || dealData.title,
+        title_c: dealData.title_c || dealData.title,
+        contact_id_c: parseInt(dealData.contact_id_c || dealData.contactId),
+        account_id_c: dealData.account_id_c || dealData.accountId,
+        value_c: parseFloat(dealData.value_c || dealData.value) || 0,
+        probability_c: parseInt(dealData.probability_c || dealData.probability) || 50,
+        stage_c: dealData.stage_c || dealData.stage || "New",
+        expected_close_date_c: dealData.expected_close_date_c || dealData.expectedCloseDate,
+        status_c: dealData.status_c || dealData.status || "Open",
+        products_c: dealData.products_c || dealData.products || "",
+        notes_c: dealData.notes_c || dealData.notes || "",
+        stage_updated_at_c: new Date().toISOString()
       };
 
       const params = {
@@ -121,7 +160,7 @@ class DealService {
       }
 
       if (response.results) {
-        const successful = response.results.filter(r => r.success);
+const successful = response.results.filter(r => r.success);
         const failed = response.results.filter(r => !r.success);
         
         if (failed.length > 0) {
@@ -136,7 +175,23 @@ class DealService {
         
         if (successful.length > 0) {
           toast.success("Deal created successfully!");
-          return successful[0].data;
+          // Transform the response data
+          const deal = successful[0].data;
+          return {
+            ...deal,
+            title: deal.title_c,
+            accountId: deal.account_id_c,
+            value: deal.value_c,
+            probability: deal.probability_c,
+            stage: deal.stage_c,
+            expectedCloseDate: deal.expected_close_date_c,
+            actualCloseDate: deal.actual_close_date_c,
+            status: deal.status_c,
+            products: deal.products_c,
+            notes: deal.notes_c,
+            contactId: deal.contact_id_c,
+            stageUpdatedAt: deal.stage_updated_at_c
+          };
         }
       }
       
@@ -258,7 +313,7 @@ class DealService {
     try {
       if (!this.apperClient) this.initializeClient();
       
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "title_c"}},
@@ -271,7 +326,8 @@ class DealService {
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "products_c"}},
           {"field": {"Name": "notes_c"}},
-          {"field": {"Name": "contact_id_c"}}
+          {"field": {"Name": "contact_id_c"}},
+          {"field": {"Name": "stage_updated_at_c"}}
         ],
         where: [
           {"FieldName": "stage_c", "Operator": "EqualTo", "Values": [stage], "Include": true}
@@ -283,6 +339,24 @@ class DealService {
       if (!response.success) {
         console.error("Error fetching deals by stage:", response.message);
         return [];
+// Transform database field names to UI-expected format
+        const transformedData = (response.data || []).map(deal => ({
+          ...deal,
+          title: deal.title_c,
+          accountId: deal.account_id_c,
+          value: deal.value_c,
+          probability: deal.probability_c,
+          stage: deal.stage_c,
+          expectedCloseDate: deal.expected_close_date_c,
+          actualCloseDate: deal.actual_close_date_c,
+          status: deal.status_c,
+          products: deal.products_c,
+          notes: deal.notes_c,
+          contactId: deal.contact_id_c,
+          stageUpdatedAt: deal.stage_updated_at_c
+        }));
+        
+        return transformedData;
       }
       
       return response.data || [];
@@ -296,7 +370,7 @@ class DealService {
     try {
       if (!this.apperClient) this.initializeClient();
       
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "title_c"}},
@@ -309,7 +383,8 @@ class DealService {
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "products_c"}},
           {"field": {"Name": "notes_c"}},
-          {"field": {"Name": "contact_id_c"}}
+          {"field": {"Name": "contact_id_c"}},
+          {"field": {"Name": "stage_updated_at_c"}}
         ],
         where: [
           {"FieldName": "contact_id_c", "Operator": "EqualTo", "Values": [parseInt(contactId)], "Include": true}
@@ -321,6 +396,24 @@ class DealService {
       if (!response.success) {
         console.error("Error fetching deals by contact:", response.message);
         return [];
+// Transform database field names to UI-expected format
+        const transformedData = (response.data || []).map(deal => ({
+          ...deal,
+          title: deal.title_c,
+          accountId: deal.account_id_c,
+          value: deal.value_c,
+          probability: deal.probability_c,
+          stage: deal.stage_c,
+          expectedCloseDate: deal.expected_close_date_c,
+          actualCloseDate: deal.actual_close_date_c,
+          status: deal.status_c,
+          products: deal.products_c,
+          notes: deal.notes_c,
+          contactId: deal.contact_id_c,
+          stageUpdatedAt: deal.stage_updated_at_c
+        }));
+        
+        return transformedData;
       }
       
       return response.data || [];

@@ -1,4 +1,5 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
 
 class ContactService {
   constructor() {
@@ -21,7 +22,7 @@ class ContactService {
     try {
       if (!this.apperClient) this.initializeClient();
       
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
@@ -43,9 +44,24 @@ class ContactService {
         console.error("Error fetching contacts:", response.message);
         toast.error(response.message);
         return [];
-      }
+}
       
-      return response.data || [];
+      // Transform database field names to UI-expected format
+      const transformedData = (response.data || []).map(contact => ({
+        ...contact,
+        firstName: contact.first_name_c,
+        lastName: contact.last_name_c,
+        email: contact.email_c,
+        phone: contact.phone_c,
+        company: contact.company_c,
+        jobTitle: contact.job_title_c,
+        accountId: contact.account_id_c,
+        relationshipLevel: contact.relationship_level_c,
+        lastInteraction: contact.last_interaction_c,
+        notes: contact.notes_c
+      }));
+      
+      return transformedData;
     } catch (error) {
       console.error("Error fetching contacts:", error?.response?.data?.message || error);
       toast.error("Failed to fetch contacts");
@@ -58,7 +74,7 @@ class ContactService {
       if (!this.apperClient) this.initializeClient();
       
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
           {"field": {"Name": "last_name_c"}},
@@ -78,9 +94,26 @@ class ContactService {
       if (!response.success) {
         console.error("Error fetching contact:", response.message);
         return null;
-      }
+}
       
-      return response.data;
+      // Transform database field names to UI-expected format
+      if (response.data) {
+        const contact = response.data;
+        return {
+          ...contact,
+          firstName: contact.first_name_c,
+          lastName: contact.last_name_c,
+          email: contact.email_c,
+          phone: contact.phone_c,
+          company: contact.company_c,
+          jobTitle: contact.job_title_c,
+          accountId: contact.account_id_c,
+          relationshipLevel: contact.relationship_level_c,
+          lastInteraction: contact.last_interaction_c,
+          notes: contact.notes_c
+        };
+      }
+      return null;
     } catch (error) {
       console.error("Error fetching contact:", error?.response?.data?.message || error);
       return null;
@@ -92,18 +125,18 @@ class ContactService {
       if (!this.apperClient) this.initializeClient();
       
       // Only include updateable fields
-      const createData = {
-        Name: `${contactData.first_name_c} ${contactData.last_name_c}`,
-        first_name_c: contactData.first_name_c,
-        last_name_c: contactData.last_name_c,
-        email_c: contactData.email_c,
-        phone_c: contactData.phone_c,
-        company_c: contactData.company_c,
-        job_title_c: contactData.job_title_c,
-        account_id_c: contactData.account_id_c,
-        relationship_level_c: contactData.relationship_level_c || "Decision Maker",
+const createData = {
+        Name: `${contactData.first_name_c || contactData.firstName} ${contactData.last_name_c || contactData.lastName}`,
+        first_name_c: contactData.first_name_c || contactData.firstName,
+        last_name_c: contactData.last_name_c || contactData.lastName,
+        email_c: contactData.email_c || contactData.email,
+        phone_c: contactData.phone_c || contactData.phone,
+        company_c: contactData.company_c || contactData.company,
+        job_title_c: contactData.job_title_c || contactData.jobTitle,
+        account_id_c: contactData.account_id_c || contactData.accountId,
+        relationship_level_c: contactData.relationship_level_c || contactData.relationshipLevel || "Decision Maker",
         last_interaction_c: new Date().toISOString(),
-        notes_c: contactData.notes_c || ""
+        notes_c: contactData.notes_c || contactData.notes || ""
       };
 
       const params = {
@@ -156,20 +189,23 @@ class ContactService {
       };
 
       // Add only provided updateable fields
-      if (updateData.first_name_c !== undefined) updatePayload.first_name_c = updateData.first_name_c;
-      if (updateData.last_name_c !== undefined) updatePayload.last_name_c = updateData.last_name_c;
-      if (updateData.email_c !== undefined) updatePayload.email_c = updateData.email_c;
-      if (updateData.phone_c !== undefined) updatePayload.phone_c = updateData.phone_c;
-      if (updateData.company_c !== undefined) updatePayload.company_c = updateData.company_c;
-      if (updateData.job_title_c !== undefined) updatePayload.job_title_c = updateData.job_title_c;
-      if (updateData.account_id_c !== undefined) updatePayload.account_id_c = updateData.account_id_c;
-      if (updateData.relationship_level_c !== undefined) updatePayload.relationship_level_c = updateData.relationship_level_c;
-      if (updateData.last_interaction_c !== undefined) updatePayload.last_interaction_c = updateData.last_interaction_c;
-      if (updateData.notes_c !== undefined) updatePayload.notes_c = updateData.notes_c;
+// Handle both database field names and UI field names
+      if (updateData.first_name_c !== undefined || updateData.firstName !== undefined) updatePayload.first_name_c = updateData.first_name_c || updateData.firstName;
+      if (updateData.last_name_c !== undefined || updateData.lastName !== undefined) updatePayload.last_name_c = updateData.last_name_c || updateData.lastName;
+      if (updateData.email_c !== undefined || updateData.email !== undefined) updatePayload.email_c = updateData.email_c || updateData.email;
+      if (updateData.phone_c !== undefined || updateData.phone !== undefined) updatePayload.phone_c = updateData.phone_c || updateData.phone;
+      if (updateData.company_c !== undefined || updateData.company !== undefined) updatePayload.company_c = updateData.company_c || updateData.company;
+      if (updateData.job_title_c !== undefined || updateData.jobTitle !== undefined) updatePayload.job_title_c = updateData.job_title_c || updateData.jobTitle;
+      if (updateData.account_id_c !== undefined || updateData.accountId !== undefined) updatePayload.account_id_c = updateData.account_id_c || updateData.accountId;
+      if (updateData.relationship_level_c !== undefined || updateData.relationshipLevel !== undefined) updatePayload.relationship_level_c = updateData.relationship_level_c || updateData.relationshipLevel;
+      if (updateData.last_interaction_c !== undefined || updateData.lastInteraction !== undefined) updatePayload.last_interaction_c = updateData.last_interaction_c || updateData.lastInteraction;
+      if (updateData.notes_c !== undefined || updateData.notes !== undefined) updatePayload.notes_c = updateData.notes_c || updateData.notes;
       
       // Update Name if first/last name changed
-      if (updateData.first_name_c !== undefined || updateData.last_name_c !== undefined) {
-        updatePayload.Name = `${updateData.first_name_c || ''} ${updateData.last_name_c || ''}`.trim();
+      if ((updateData.first_name_c !== undefined || updateData.firstName !== undefined) || (updateData.last_name_c !== undefined || updateData.lastName !== undefined)) {
+        const firstName = updateData.first_name_c || updateData.firstName || '';
+        const lastName = updateData.last_name_c || updateData.lastName || '';
+        updatePayload.Name = `${firstName} ${lastName}`.trim();
       }
 
       const params = {
@@ -258,7 +294,7 @@ class ContactService {
       if (!this.apperClient) this.initializeClient();
       
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "first_name_c"}},
           {"field": {"Name": "last_name_c"}},
@@ -280,10 +316,25 @@ class ContactService {
       
       if (!response.success) {
         console.error("Error fetching contacts by account:", response.message);
-        return [];
+return [];
       }
       
-      return response.data || [];
+      // Transform database field names to UI-expected format
+      const transformedData = (response.data || []).map(contact => ({
+        ...contact,
+        firstName: contact.first_name_c,
+        lastName: contact.last_name_c,
+        email: contact.email_c,
+        phone: contact.phone_c,
+        company: contact.company_c,
+        jobTitle: contact.job_title_c,
+        accountId: contact.account_id_c,
+        relationshipLevel: contact.relationship_level_c,
+        lastInteraction: contact.last_interaction_c,
+        notes: contact.notes_c
+      }));
+      
+      return transformedData;
     } catch (error) {
       console.error("Error fetching contacts by account:", error?.response?.data?.message || error);
       return [];
