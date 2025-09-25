@@ -22,8 +22,12 @@ const Deals = () => {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("All");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
+
+  const handleCardClick = (deal) => {
+    handleEdit(deal);
+  };
   const [formData, setFormData] = useState({
     title: "",
     contactId: "",
@@ -208,8 +212,13 @@ const Deals = () => {
           />
         ) : (
           <div className="grid gap-6">
-            {filteredDeals.map((deal) => (
-              <Card key={deal.Id} className="hover:shadow-lg transition-all duration-200">
+{filteredDeals.map((deal) => (
+              <Card 
+                key={deal.Id} 
+                hover={true}
+                onClick={() => handleCardClick(deal)}
+                className="hover:shadow-lg transition-all duration-200"
+              >
                 <div className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -294,7 +303,7 @@ const Deals = () => {
                       )}
                     </div>
 
-                    <div className="flex items-center space-x-2 ml-4">
+                    <div className="flex items-center space-x-2 ml-4" onClick={(e) => e.stopPropagation()}>
                       <Button
                         variant="ghost"
                         size="sm"

@@ -1,14 +1,16 @@
 import React from "react";
 import { cn } from "@/utils/cn";
 
-const Card = ({ children, className = "", hover = false, ...props }) => {
+const Card = ({ children, className = "", hover = false, onClick, ...props }) => {
   return (
     <div
       className={cn(
         "bg-white rounded-xl border border-gray-100 shadow-sm",
-        hover && "hover:shadow-md hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer",
+        hover && "hover:shadow-md hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-200",
+        onClick && "cursor-pointer",
         className
       )}
+      onClick={onClick}
       {...props}
     >
       {children}
