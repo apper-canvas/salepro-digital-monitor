@@ -200,11 +200,17 @@ const Invoices = () => {
     return deal ? deal.title : "";
   };
 
-  const filteredInvoices = invoices.filter(invoice => {
+const filteredInvoices = invoices.filter(invoice => {
+    if (!invoice) return false;
+    
+    const invoiceNumber = invoice.invoiceNumber || '';
+    const contactName = getContactName(invoice.contactId) || '';
+    const contactCompany = getContactCompany(invoice.contactId) || '';
+    
     const matchesSearch = 
-      invoice.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getContactName(invoice.contactId).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getContactCompany(invoice.contactId).toLowerCase().includes(searchTerm.toLowerCase());
+      invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contactCompany.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = selectedStatus === "All" || invoice.status === selectedStatus;
     return matchesSearch && matchesStatus;
   });
@@ -269,8 +275,8 @@ const Invoices = () => {
                         <div className="bg-warning-100 p-2 rounded-full">
                           <ApperIcon name="FileText" className="h-5 w-5 text-warning-600" />
                         </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{invoice.invoiceNumber}</h3>
+<div>
+                          <h3 className="text-lg font-semibold text-gray-900">{invoice.invoiceNumber || 'No Invoice Number'}</h3>
                           <p className="text-sm text-gray-500">
                             {getContactName(invoice.contactId)} at {getContactCompany(invoice.contactId)}
                           </p>
@@ -286,36 +292,36 @@ const Invoices = () => {
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Subtotal</p>
                           <p className="text-lg font-bold text-gray-900">
-                            ${invoice.subtotal.toLocaleString()}
+${(invoice.subtotal || 0).toLocaleString()}
                           </p>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Tax</p>
-                          <p className="text-lg font-medium text-gray-900">
-                            ${invoice.taxAmount.toLocaleString()}
+<p className="text-lg font-medium text-gray-900">
+                            ${(invoice.taxAmount || 0).toLocaleString()}
                           </p>
                         </div>
                         <div className="bg-primary-50 p-3 rounded-lg border border-primary-200">
                           <p className="text-xs text-primary-600 mb-1">Total Amount</p>
-                          <p className="text-xl font-bold text-primary-900">
-                            ${invoice.totalAmount.toLocaleString()}
+<p className="text-xl font-bold text-primary-900">
+                            ${(invoice.totalAmount || 0).toLocaleString()}
                           </p>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-xs text-gray-500 mb-1">Due Date</p>
-                          <p className="text-sm font-medium text-gray-900">
-                            {format(new Date(invoice.dueDate), "MMM d, yyyy")}
+<p className="text-sm font-medium text-gray-900">
+                            {invoice.dueDate ? format(new Date(invoice.dueDate), "MMM d, yyyy") : 'No Due Date'}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <Badge variant={invoice.status.toLowerCase()}>
-                            {invoice.status}
+<Badge variant={(invoice.status || 'draft').toLowerCase()}>
+                            {invoice.status || 'Draft'}
                           </Badge>
                           <select
-                            value={invoice.status}
+                            value={invoice.status || 'Draft'}
                             onChange={(e) => handleStatusChange(invoice.Id, e.target.value)}
                             className="text-xs border border-gray-200 rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500"
                             onClick={(e) => e.stopPropagation()}
@@ -327,8 +333,8 @@ const Invoices = () => {
                           </select>
                         </div>
                         
-                        <div className="text-right text-xs text-gray-400">
-                          <p>Issued: {format(new Date(invoice.issueDate), "MMM d, yyyy")}</p>
+<div className="text-right text-xs text-gray-400">
+                          <p>Issued: {invoice.issueDate ? format(new Date(invoice.issueDate), "MMM d, yyyy") : 'Not Set'}</p>
                           {invoice.paymentDate && (
                             <p>Paid: {format(new Date(invoice.paymentDate), "MMM d, yyyy")}</p>
                           )}

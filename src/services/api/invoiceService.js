@@ -1,4 +1,5 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
 
 class InvoiceService {
   constructor() {
@@ -46,7 +47,9 @@ class InvoiceService {
         return [];
       }
       
-      return response.data || [];
+// Transform data to camelCase for UI consistency
+      const transformedData = (response.data || []).map(invoice => this.transformInvoiceData(invoice));
+      return transformedData;
     } catch (error) {
       console.error("Error fetching invoices:", error?.response?.data?.message || error);
       toast.error("Failed to fetch invoices");
@@ -82,7 +85,7 @@ class InvoiceService {
         return null;
       }
       
-      return response.data;
+return response.data ? this.transformInvoiceData(response.data) : null;
     } catch (error) {
       console.error("Error fetching invoice:", error?.response?.data?.message || error);
       return null;
@@ -140,7 +143,7 @@ class InvoiceService {
         
         if (successful.length > 0) {
           toast.success("Invoice created successfully!");
-          return successful[0].data;
+return this.transformInvoiceData(successful[0].data);
         }
       }
       
@@ -205,7 +208,7 @@ class InvoiceService {
         
         if (successful.length > 0) {
           toast.success("Invoice updated successfully!");
-          return successful[0].data;
+return this.transformInvoiceData(successful[0].data);
         }
       }
       
@@ -288,8 +291,8 @@ class InvoiceService {
         console.error("Error fetching invoices by status:", response.message);
         return [];
       }
-      
-      return response.data || [];
+const transformedData = (response.data || []).map(invoice => this.transformInvoiceData(invoice));
+      return transformedData;
     } catch (error) {
       console.error("Error fetching invoices by status:", error?.response?.data?.message || error);
       return [];
@@ -322,16 +325,38 @@ class InvoiceService {
       
       const response = await this.apperClient.fetchRecords(this.tableName, params);
       
-      if (!response.success) {
+if (!response.success) {
         console.error("Error fetching invoices by contact:", response.message);
         return [];
       }
       
-      return response.data || [];
+      const transformedData = (response.data || []).map(invoice => this.transformInvoiceData(invoice));
+      return transformedData;
     } catch (error) {
       console.error("Error fetching invoices by contact:", error?.response?.data?.message || error);
       return [];
     }
   }
+
+  // Transform database field names to UI-friendly camelCase names
+  transformInvoiceData(invoice) {
+    if (!invoice) return null;
+    
+    return {
+      Id: invoice.Id,
+      invoiceNumber: invoice.invoice_number_c || invoice.Name || '',
+      issueDate: invoice.issue_date_c || '',
+      dueDate: invoice.due_date_c || '',
+      lineItems: invoice.line_items_c ? JSON.parse(invoice.line_items_c) : [],
+      subtotal: parseFloat(invoice.subtotal_c) || 0,
+      taxAmount: parseFloat(invoice.tax_amount_c) || 0,
+      totalAmount: parseFloat(invoice.total_amount_c) || 0,
+      status: invoice.status_c || 'Draft',
+      paymentDate: invoice.payment_date_c || null,
+      contactId: invoice.contact_id_c || '',
+      dealId: invoice.deal_id_c || null
+    };
+  }
 }
+
 export default new InvoiceService();
