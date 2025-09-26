@@ -140,6 +140,36 @@ class LeadService {
 if (successful.length > 0) {
           toast.success("Lead created successfully!");
           
+          const createdLead = successful[0].data;
+          
+          // Send email notification if lead status is "Completed"
+          if (createdLead.status_c === "Completed") {
+            try {
+              const { ApperClient } = window.ApperSDK;
+              const apperClient = new ApperClient({
+                apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+                apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+              });
+              
+              const emailResult = await apperClient.functions.invoke(import.meta.env.VITE_SEND_LEAD_COMPLETION_EMAIL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(createdLead)
+              });
+
+              if (emailResult && emailResult.success) {
+                console.info(`apper_info: Lead completion email sent successfully to ${createdLead.email_c}`);
+              } else {
+                console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SEND_LEAD_COMPLETION_EMAIL}. The response body is: ${JSON.stringify(emailResult)}.`);
+              }
+            } catch (emailError) {
+              console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SEND_LEAD_COMPLETION_EMAIL}. The error is: ${emailError.message}`);
+              // Don't throw error - lead creation should succeed even if email fails
+            }
+          }
+          
           // Send Slack notification for new lead
           try {
             const { ApperClient } = window.ApperSDK;
@@ -153,14 +183,14 @@ if (successful.length > 0) {
               headers: {
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify(successful[0].data)
+              body: JSON.stringify(createdLead)
             });
           } catch (notificationError) {
             console.error('Failed to send Slack notification:', notificationError);
             // Don't throw error - lead creation should succeed even if notification fails
           }
           
-          return successful[0].data;
+          return createdLead;
         }
       }
       
