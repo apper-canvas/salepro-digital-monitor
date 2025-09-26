@@ -87,7 +87,7 @@ class ClientService {
     }
   }
 
-  async create(clientData) {
+async create(clientData) {
     try {
       if (!this.apperClient) this.initializeClient();
       
@@ -133,8 +133,13 @@ class ClientService {
         }
         
         if (successful.length > 0) {
+          const createdClient = successful[0].data;
           toast.success("Client created successfully!");
-          return successful[0].data;
+          
+          // Send welcome email after successful client creation
+          this.sendWelcomeEmail(createdClient);
+          
+          return createdClient;
         }
       }
       
@@ -143,6 +148,39 @@ class ClientService {
       console.error("Error creating client:", error?.response?.data?.message || error);
       toast.error("Failed to create client");
       return null;
+    }
+  }
+
+  async sendWelcomeEmail(clientData) {
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      // Prepare welcome email data
+      const emailData = {
+        clientName: clientData.Name || `${clientData.first_name_c} ${clientData.last_name_c}`,
+        clientEmail: clientData.email_c,
+        clientCompany: clientData.company_c || 'Your Company'
+      };
+
+      // Call the welcome email Edge function
+      const result = await this.apperClient.functions.invoke(import.meta.env.VITE_SEND_WELCOME_EMAIL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(emailData)
+      });
+
+      if (result && result.success) {
+        toast.success("Welcome email sent successfully!");
+        console.log("Welcome email sent to:", clientData.email_c);
+      } else {
+        console.error("Failed to send welcome email:", result?.message || "Unknown error");
+        toast.warning("Client created, but welcome email could not be sent");
+      }
+    } catch (error) {
+      console.error("Error sending welcome email:", error);
+      toast.warning("Client created, but welcome email could not be sent");
     }
   }
 
