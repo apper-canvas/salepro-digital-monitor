@@ -132,17 +132,9 @@ class ClientService {
           });
         }
         
-if (successful.length > 0) {
-          const createdClient = successful[0].data;
+        if (successful.length > 0) {
           toast.success("Client created successfully!");
-          
-          // Send welcome email asynchronously
-          this.sendWelcomeEmail(createdClient).catch(error => {
-            console.error("Failed to send welcome email:", error);
-            // Don't show error to user as client was created successfully
-          });
-          
-          return createdClient;
+          return successful[0].data;
         }
       }
       
@@ -151,40 +143,6 @@ if (successful.length > 0) {
       console.error("Error creating client:", error?.response?.data?.message || error);
       toast.error("Failed to create client");
       return null;
-    }
-  }
-
-  async sendWelcomeEmail(clientData) {
-    try {
-      const { ApperClient } = window.ApperSDK;
-      const apperClient = new ApperClient({
-        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-      });
-
-      const result = await apperClient.functions.invoke(import.meta.env.VITE_SEND_WELCOME_EMAIL || 'send-welcome-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email_c: clientData.email_c,
-          first_name_c: clientData.first_name_c,
-          last_name_c: clientData.last_name_c,
-          company_c: clientData.company_c,
-          job_title_c: clientData.job_title_c
-        })
-      });
-
-      if (result && result.success) {
-        console.log(`Welcome email sent successfully to ${clientData.email_c}`);
-        return result;
-      } else {
-        throw new Error(result?.message || 'Failed to send welcome email');
-      }
-    } catch (error) {
-      console.error("Error sending welcome email:", error);
-      throw error;
     }
   }
 
