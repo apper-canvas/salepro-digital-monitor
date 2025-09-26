@@ -255,9 +255,40 @@ if (successful.length > 0) {
           });
         }
         
-        if (successful.length > 0) {
+if (successful.length > 0) {
           toast.success("Lead updated successfully!");
-          return successful[0].data;
+          
+          const updatedLead = successful[0].data;
+          
+          // Send email notification if lead status is updated to "Qualified"
+          if (updatedLead.status_c === "Qualified") {
+            try {
+              const { ApperClient } = window.ApperSDK;
+              const apperClient = new ApperClient({
+                apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+                apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+              });
+              
+              const emailResult = await apperClient.functions.invoke(import.meta.env.VITE_SEND_LEAD_QUALIFIED_EMAIL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedLead)
+              });
+
+              if (emailResult && emailResult.success) {
+                console.info(`apper_info: Lead qualified email sent successfully to ${updatedLead.email_c}`);
+              } else {
+                console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SEND_LEAD_QUALIFIED_EMAIL}. The response body is: ${JSON.stringify(emailResult)}.`);
+              }
+            } catch (emailError) {
+              console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_SEND_LEAD_QUALIFIED_EMAIL}. The error is: ${emailError.message}`);
+              // Don't throw error - lead update should succeed even if email fails
+            }
+          }
+          
+          return updatedLead;
         }
       }
       

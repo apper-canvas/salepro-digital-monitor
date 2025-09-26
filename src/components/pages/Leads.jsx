@@ -34,7 +34,7 @@ first_name_c: "",
     status_c: "New"
   });
 
-  const statuses = ["All", "New", "Contacted", "Qualified", "Unqualified"];
+const statuses = ["All", "New", "Contacted", "Qualified", "Unqualified", "Completed"];
   const leadSources = ["Website", "LinkedIn", "Referral", "Trade Show", "Cold Call", "Email"];
   const industries = ["Technology", "Healthcare", "Finance", "Retail", "Manufacturing", "Education"];
 
@@ -354,10 +354,11 @@ value={formData.industry_c}
                   onChange={(e) => setFormData({...formData, status_c: e.target.value})}
                   className="flex w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
-                  <option value="New">New</option>
+<option value="New">New</option>
                   <option value="Contacted">Contacted</option>
                   <option value="Qualified">Qualified</option>
                   <option value="Unqualified">Unqualified</option>
+                  <option value="Completed">Completed</option>
                 </select>
               </FormField>
             </div>
